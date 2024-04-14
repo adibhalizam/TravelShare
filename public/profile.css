@@ -1,0 +1,76 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+    padding: 0;
+}
+
+/* profile Styles */
+.profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #407BA7; /* Dark blue */
+    color: #FFFFFF; /* White */
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section{
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.profile img {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Adjust size as needed */
+    border-radius: 50%;
+}
+
+
+.itinerary {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    padding: 10px; /* Adjust padding as needed */
+    border-radius: 20px; /* Adjust border radius to create a curved shape */
+    background-color: #f0f0f0; /* Background color for the container */
+   margin-bottom: 10px;
+    overflow: hidden; /* Hide overflow to clip the curved edges */
+    position: relative; /* Positioning for the edit link */
+}
+
+.itinerary img {
+    width: 100px; /* Adjust width as needed */
+    height: 100px; /* Adjust height as needed */
+    border-radius: 50%;
+    margin-right: 10px; /* Add space between image and text */
+}
+
+.itinerary-details {
+    flex-grow: 1; /* Allow the details to take up remaining space */
+}
+
+.itinerary-details h3 {
+    margin: 0;
+}
+
+.itinerary-details p {
+    margin: 5px 0;
+}
+
+a{
+    text-decoration: none;
+    color: #002962;
+
+}
+.link {
+    position: absolute;
+    top: 10px; /* Adjust top position as needed */
+    right: 10px; /* Adjust right position as needed */
+    
+}

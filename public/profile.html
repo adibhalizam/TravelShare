@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Itineraries</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <header>
+        <h1 id="header">TravelShare</h1>
+    </header>  
+    <div id="container">
+        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+        
+        <h2>Your Itineraries</h2>
+        <div id="userItineraries"><!-- User itineraries go here --></div>
+
+        <h2>Create a New Itinerary</h2>
+        <form id="itineraryForm">
+            <label for="destination">Destination:</label><br>
+            <input type="text" id="destination" name="destination" required><br>
+            
+            <label for="startDate">Start Date:</label><br>
+            <input type="date" id="startDate" name="startDate" required><br>
+            
+            <label for="endDate">End Date:</label><br>
+            <input type="date" id="endDate" name="endDate" required><br>
+            
+            <label>Activities:</label><br>
+            <div id="activities">
+                <!-- Activity fields go here -->
+                <div class="activity-entry">
+                    <input type="text" name="activityDescription" placeholder="Activity description" required>
+                    <input type="date" name="activityDate" required>
+                    <button type="button" onclick="removeActivityField(this)">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="addActivityBtn" onclick="addActivityField()">Add Activity</button><br>
+            
+            <label>Expenses:</label><br>
+            <div id="expenses">
+                <!-- Expenses fields go here -->
+                <div class="expense-entry">
+                    <input type="text" name="expenseDescription" placeholder="Expense description" required>
+                    <input type="number" name="expenseAmount" placeholder="Amount" required>
+                    <button type="button" onclick="removeExpenseField(this)">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="addExpenseBtn" onclick="addExpenseField()">Add Expense</button><br>
+
+            <label for="imageLink">Image Link:</label><br>
+            <input type="text" id="imageLink" name="imageLink" required><br>
+            
+            <input type="submit" id="submitBtn" value="Create Itinerary">
+        </form>
+
+        <h2>Liked Itineraries</h2>
+        <div id="userLikedItineraries"><!-- Liked itineraries go here --></div>
+    </div>
+    <footer>
+        <h5>&copy; Travel Planner, 2023</h5>
+    </footer>
+
+    <script>
+        const currentUserId = sessionStorage.getItem('userId') || 'user-id-placeholder'; 
+
+        function calculateDuration(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            return (Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1) + ' days';
+        }
+
+        function calculateTotalExpenses(expensesArray) {
+            return expensesArray.reduce((total, expense) => total + expense.amount, 0);
+        }
+
+        function fetchItineraries() {
+            // Fetch itineraries created by the user
+            fetch('http://localhost:3000/userItineraries?userId=' + currentUserId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(itineraries => {
+                    const userItinerariesDiv = document.getElementById('userItineraries');
+
+                    // Clear out the previous list of itineraries
+                    while (userItinerariesDiv.firstChild) {
+                        userItinerariesDiv.removeChild(userItinerariesDiv.firstChild);
+                    }
+
+                    itineraries.forEach(itinerary => {
+                        // Create elements for each itinerary
+                        let div = document.createElement('div');
+                        const duration = calculateDuration(itinerary.startDate, itinerary.endDate);
+                        const totalExpenses = calculateTotalExpenses(itinerary.expenses);
+                        div.innerHTML = `
+                            <h3>${itinerary.destination}</h3>
+                            <p>Start Date: ${itinerary.startDate}</p>
+                            <p>End Date: ${itinerary.endDate}</p>
+                            <p>Duration: ${duration}</p>
+                            <p>Total Expense: $${totalExpenses.toFixed(2)}</p>
+                            <!-- include elements for activities and the image -->
+                            <!-- include buttons for editing and deleting the itinerary -->
+                        `;
+                        userItinerariesDiv.appendChild(div);
+                    });
+                })
+                .catch(error => console.error('Error fetching user itineraries:', error));
+        }
+        
+        function removeActivityField(button) {
+            button.parentElement.remove();
+        }
+
+        function addActivityField() {
+            const activitiesDiv = document.getElementById('activities');
+            const activityEntry = document.createElement('div');
+            activityEntry.className = 'activity-entry';
+            activityEntry.innerHTML = `
+                <input type="text" name="activityDescription" placeholder="Activity description" required>
+                <input type="date" name="activityDate" required>
+                <button type="button" onclick="removeActivityField(this)">Remove</button>
+            `;
+            activitiesDiv.appendChild(activityEntry);
+            updateActivityDateConstraints();
+        }
+
+        function addExpenseField() {
+            const expensesDiv = document.getElementById('expenses');
+            const expenseEntry = document.createElement('div');
+            expenseEntry.className = 'expense-entry';
+            expenseEntry.innerHTML = `
+                <input type="text" name="expenseDescription" placeholder="Expense description" required>
+                <input type="number" name="expenseAmount" placeholder="Amount" step="0.01" required>
+                <button type="button" onclick="removeExpenseField(this)">Remove</button>
+            `;
+            expensesDiv.appendChild(expenseEntry);
+        }
+
+        function removeExpenseField(button) {
+            button.parentElement.remove();
+            // Optionally, recalculate total expenses when removing an expense
+        }
+
+        function updateActivityDateConstraints() {
+            const startDateVal = document.getElementById('startDate').value;
+            const endDateVal = document.getElementById('endDate').value;
+            document.querySelectorAll('input[name="activityDate"]').forEach(input => {
+                input.setAttribute('min', startDateVal);
+                input.setAttribute('max', endDateVal);
+            });
+        }
+
+        function navigateDashboard() {
+            window.location.href = "home.html";
+        }
+
+        function createItinerary(event) {
+            event.preventDefault();
+            const activities = [];
+            document.querySelectorAll('.activity-entry').forEach(entry => {
+                const description = entry.querySelector('input[name="activityDescription"]').value;
+                const date = entry.querySelector('input[name="activityDate"]').value;
+                activities.push({ description, date });
+            });
+
+            const expenses = [];
+            document.querySelectorAll('.expense-entry').forEach(entry => {
+                const description = entry.querySelector('input[name="expenseDescription"]').value;
+                const amount = entry.querySelector('input[name="expenseAmount"]').value;
+                expenses.push({ description, amount });
+            });
+
+            const itineraryData = {
+                user: currentUserId,
+                destination: document.getElementById('destination').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                activities,
+                expenses,
+                image: document.getElementById('imageLink').value
+            };
+
+            // Send itineraryData to the server
+            fetch('http://localhost:3000/itineraries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Include authorization header if required, e.g.:
+                    // 'Authorization': 'Bearer ' + userToken
+                },
+                body: JSON.stringify(itineraryData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Post-creation logic, like redirecting to a different page or refreshing the itineraries list
+                console.log(data);
+                fetchItineraries();
+            })
+            .catch(error => console.error('Error creating itinerary:', error));
+            fetchItineraries();
+        }
+
+        // Set up the initial state of the form and load initial data
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('itineraryForm').addEventListener('submit', createItinerary);
+            document.getElementById('startDate').addEventListener('change', updateActivityDateConstraints);
+            document.getElementById('endDate').addEventListener('change', updateActivityDateConstraints);
+            fetchItineraries();
+        });
+    </script>
+</body>
+
+</html>

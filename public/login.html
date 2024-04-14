@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./login.js"></script>
+    <link rel="stylesheet" type="text/css" href="login.css">
+    <title>Login</title>
+</head>
+<body>
+    <header>
+        <h1 id="header">Travel Share</h1>
+    </header>
+
+    <div class="container">
+        <main>
+            <h2>Log in to Travel Share</h2>
+            Username:
+            <input type="text" id="username" name="username" placeholder="Enter your username" required><br>
+            Password:
+            <input type="password" id="password" name="password" placeholder="Enter your password" required><br>
+            <div class="wrap">
+                <button type="submit" id="btn_login">
+                    Submit
+                </button>
+            </div>
+            <p>Not registered? 
+                <a href="./signup.html">Create an account</a>
+            </p>
+            <span id="output"></span>
+        </main>
+    </div>
+
+</body>
+
+<script>
+    
+    let outputSpan;
+
+    function handleLoginButton() {
+        console.log("Button clicked");
+
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+
+        const url = "http://localhost:3000/login";
+        const params = `?username=${username}&password=${password}`;
+
+        const fetchObject = {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        };
+
+        fetch(url + params, fetchObject)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(jsonObject => {
+                if (jsonObject) {
+                    outputSpan.innerHTML = "Logged in successfully";
+                    sessionStorage.setItem('userId', jsonObject._id);
+                    const fullName = jsonObject.fName + " " + jsonObject.lName;
+                    sessionStorage.setItem('name', fullName);
+                    window.location.href ='profile.html';
+                } else {
+                    outputSpan.innerHTML = "Wrong username or password";
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                outputSpan.innerHTML = 'Wrong username or password';
+            });
+    }
+
+    function start() {
+        const loginButton = document.getElementById("btn_login");
+        loginButton.addEventListener('click', handleLoginButton);
+        outputSpan = document.getElementById("output");
+    }
+
+    window.onload = start;
+
+</script>
+</html>

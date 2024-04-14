@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./signup.js"></script>
+    <link rel="stylesheet" type="text/css" href="signup.css">
+    <title>Registration</title>
+</head>
+<body>
+
+    <div class="container">
+    <main>
+        <h2>Register now</h2>
+        First name:
+        <input type="text" id="fname" name="fname"><br>
+        Last name:
+        <input type="text" id="lname" name="lname"><br>
+        username:
+        <input type="text" id="username" name="username"><br>
+        password:
+        <input type="text" id="password" name="password"><br>
+        <button  id="btn_reg">Register</button>
+        <p>Already have an account? Log in <a href="./login.html">here</a></p>
+        <span id="output"></span>
+    </main>
+    </div>
+</body>
+
+<script>
+    let outputSpan;
+
+    function handleRegButton(event) {
+        event.preventDefault(); // This is to prevent the form from submitting the traditional way
+
+        const fName = document.querySelector("#fname").value;
+        const lName = document.querySelector("#lname").value;
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+
+        const url = "http://localhost:3000/user";
+
+        // Make sure the property names here match your User schema
+        const dataObject = {
+            fName: fName,
+            lName: lName,
+            username: username,
+            password: password
+        }
+
+        const fetchObject = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataObject)
+        };
+
+        fetch(url, fetchObject)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(jsonObject => {
+            outputSpan.innerHTML = `Account created for ${jsonObject.fName} ${jsonObject.lName}`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            outputSpan.innerHTML = "Failed to create account. Please try again.";
+        });
+    }
+
+    function start() {
+        const regButton = document.getElementById("btn_reg");
+        regButton.addEventListener('click', handleRegButton);
+        outputSpan = document.getElementById("output");
+    }
+
+    window.onload = start;
+</script>
+</html>
