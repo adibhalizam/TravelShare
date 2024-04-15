@@ -19,6 +19,8 @@
         <div id="itineraryDetails">
             <!-- Itinerary details will be populated here -->
         </div>
+        <button id="likeButton" class="like-button">Like</button>
+        <span id="likeCount">0</span> likes
         <!-- Comment -->
         <input type="text" id="comment" placeholder="Add a comment"></input>
         <button id="comment_btn" onclick="addComment()">Submit</button>
@@ -169,6 +171,51 @@
             })
             .catch(error => console.error(error));
         }
+
+        function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+        }
+
+        const likeButton = document.getElementById('likeButton');
+        const likeCountSpan = document.getElementById('likeCount');
+        let isLiked = false;
+        let likeCount = 0;
+
+        function toggleLikeItinerary() {
+        const itineraryId = getQueryParam('id');
+        const currentUserId = sessionStorage.getItem('userId') || 'user-id-placeholder'; // Use 'currentUserId' instead of 'userId'
+
+        // Toggle the isLiked state 
+        isLiked = !isLiked;
+        // Optimistically update the UI
+        likeCountSpan.textContent = isLiked ? ++likeCount : --likeCount;
+        likeButton.classList.toggle('liked', isLiked);
+
+        fetch(`http://localhost:3000/itineraries/${itineraryId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include other headers such as Authorization if needed
+            },
+            body: JSON.stringify({ userId: currentUserId, like: isLiked }) // Corrected variable name here
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error updating like status:', error);
+            // Revert the optimistic UI update on error
+            likeCountSpan.textContent = isLiked ? --likeCount : ++likeCount;
+            likeButton.classList.toggle('liked', isLiked);
+            isLiked = !isLiked;
+        });
+        }
+
+        likeButton.addEventListener('click', toggleLikeItinerary);
 
         function navigatePage() {
             window.location.href = 'mainPage.html';
