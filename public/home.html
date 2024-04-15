@@ -19,8 +19,6 @@
     <div id="searchContainer">
         <form id="searchForm" onsubmit="searchItineraries(event)">
             <input type="text" id="destinationInput" placeholder="Enter destination">
-            <input type="date" id="startDateInput">
-            <input type="date" id="endDateInput">
             <button type="submit">Search</button>
         </form>
     </div>
@@ -36,19 +34,14 @@
             event.preventDefault(); // Prevent form submission
 
             const destination = document.getElementById('destinationInput').value.trim();
-            const startDate = document.getElementById('startDateInput').value;
-            const endDate = document.getElementById('endDateInput').value;
 
             fetch('http://localhost:3000/itineraries')
                 .then(response => response.json())
                 .then(data => {
                     const filteredItineraries = data.filter(itinerary => {
-                        // Check if the itinerary matches the search criteria
+                        // Check if the itinerary destination matches the search criteria
                         const destinationMatch = !destination || itinerary.destination.toLowerCase().includes(destination.toLowerCase());
-                        const startDateMatch = !startDate || itinerary.startDate === startDate;
-                        const endDateMatch = !endDate || itinerary.endDate === endDate;
-                        
-                        return destinationMatch && startDateMatch && endDateMatch;
+                        return destinationMatch;
                     });
 
                     renderItineraries(filteredItineraries);
