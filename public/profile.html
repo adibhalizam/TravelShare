@@ -55,8 +55,8 @@
             <input type="submit" id="submitBtn" value="Create Itinerary">
         </form>
 
-        <h2>Liked Itineraries</h2>
-        <div id="userLikedItineraries"><!-- Liked itineraries go here --></div>
+        <h2>Favourite Itineraries</h2>
+        <div id="userFavouriteItineraries"><!-- Liked itineraries go here --></div>
     </div>
     <footer>
         <h5>&copy; Travel Planner, 2023</h5>
@@ -230,12 +230,42 @@
             .catch(error => console.error('Error deleting itinerary:', error));
         }
 
+        function getFavItineraries(){
+            fetch(`http://localhost:3000/getFavoriteItineraries?user=${currentUserId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const itinerariesDiv = document.getElementById('userFavouriteItineraries');
+                    let itineraryId = [];
+                    data.forEach(async itinerary => {
+                        const response = await fetch(`http://localhost:3000/itineraries/${itinerary.itinerary}`);
+                        const itineraryData = await response.json();
+                        const itineraryParagraph = document.createElement('li');
+                        itineraryParagraph.textContent = itineraryData.destination;  //Display only title here
+                        itineraryId.push({id : itinerary._id});
+                        const viewButton = document.createElement('button');
+                        viewButton.textContent = 'View Itinerary';
+                        viewButton.id = "viewBtn";
+                        // Allows the button to redirect to specificRecipe.html with the recipe id as a query parameter
+                        viewButton.onclick = function() { 
+                            window.location.href = `specificItinerary.html?id=${itinerary.itinerary}`;
+                            
+                        };
+                        itineraryParagraph.appendChild(viewButton);
+                        itinerariesDiv.appendChild(itineraryParagraph);
+                    });
+
+                
+                })
+                .catch(error => console.error(error));   
+        }
+
         // Set up the initial state of the form and load initial data
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('itineraryForm').addEventListener('submit', createItinerary);
             document.getElementById('startDate').addEventListener('change', updateActivityDateConstraints);
             document.getElementById('endDate').addEventListener('change', updateActivityDateConstraints);
             fetchItineraries();
+            getFavItineraries();
         });
     </script>
 </body>
