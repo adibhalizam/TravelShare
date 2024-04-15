@@ -19,8 +19,13 @@
           ></path>
         </svg>
         <h1 id="header">TravelShare</h1>
-        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
-        <button id="editProfileBtn" onclick="navigateToEditProfile()">Edit Profile</button>
+
+        <div id="header-button">
+          <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+          <button id="editProfileBtn" onclick="navigateToEditProfile()">
+            Edit Profile
+          </button>
+        </div>
       </div>
     </header>
     <div id="container">
@@ -217,8 +222,8 @@
       }
 
       function navigateToEditProfile() {
-            // Navigate to the editProfile.html page
-            window.location.href = "editProfile.html";
+        // Navigate to the editProfile.html page
+        window.location.href = "editProfile.html";
       }
 
       function createItinerary(event) {
@@ -314,7 +319,8 @@
               );
               const itineraryData = await response.json();
               const itineraryParagraph = document.createElement("li");
-              itineraryParagraph.classList.add("fav-itinerary");itineraryParagraph.classList.add("fav-itinerary");
+              itineraryParagraph.classList.add("fav-itinerary");
+              itineraryParagraph.classList.add("fav-itinerary");
               itineraryParagraph.textContent = itineraryData.destination; //Display only title here
               //itineraryId.push({ id: itinerary._id });
               const viewButton = document.createElement("button");

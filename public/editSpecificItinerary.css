@@ -30,8 +30,7 @@ header {
   margin-right: 10px; /* Add some margin between the icon and the heading */
 }
 
-#header-button {
-  justify-contents: space-between;
+#mainBtn {
   margin-left: auto; /* Push the button to the leftmost position */
 }
 

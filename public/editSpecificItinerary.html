@@ -1,214 +1,272 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Edit Itinerary</title>
-    <link rel="stylesheet" href="profile.css">
-</head>
+    <link rel="stylesheet" href="editSpecificItinerary.css" />
+  </head>
 
-<body>
+  <body>
     <header>
+      <div class="header-container">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          id="map-marker"
+        >
+          <path
+            fill="#F1090A"
+            d="M12,2a8,8,0,0,0-8,8c0,5.4,7.05,11.5,7.35,11.76a1,1,0,0,0,1.3,0C13,21.5,20,15.4,20,10A8,8,0,0,0,12,2Zm0,17.65c-2.13-2-6-6.31-6-9.65a6,6,0,0,1,12,0C18,13.34,14.13,17.66,12,19.65ZM12,6a4,4,0,1,0,4,4A4,4,0,0,0,12,6Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,12Z"
+          ></path>
+        </svg>
         <h1 id="header">TravelShare</h1>
+        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+      </div>
     </header>
     <div id="container">
-        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+      <h2>Edit Itinerary</h2>
+      <div id="editFormContainer">
+        <form id="editForm">
+          <label for="editDestination">Destination:</label><br />
+          <input
+            type="text"
+            id="editDestination"
+            name="destination"
+            required
+          /><br />
 
-        <h2>Edit Itinerary</h2>
-        <div id="editFormContainer">
-            <form id="editForm">
-                <label for="editDestination">Destination:</label><br>
-                <input type="text" id="editDestination" name="destination" required><br>
+          <label for="editStartDate">Start Date:</label><br />
+          <input
+            type="date"
+            id="editStartDate"
+            name="startDate"
+            required
+          /><br />
 
-                <label for="editStartDate">Start Date:</label><br>
-                <input type="date" id="editStartDate" name="startDate" required><br>
+          <label for="editEndDate">End Date:</label><br />
+          <input type="date" id="editEndDate" name="endDate" required /><br />
 
-                <label for="editEndDate">End Date:</label><br>
-                <input type="date" id="editEndDate" name="endDate" required><br>
+          <label>Activities:</label><br />
+          <div id="editActivities">
+            <!-- Activity fields go here -->
+          </div>
+          <button
+            type="button"
+            id="editAddActivityBtn"
+            onclick="addEditActivityField()"
+          >
+            Add Activity</button
+          ><br />
 
-                <label>Activities:</label><br>
-                <div id="editActivities">
-                    <!-- Activity fields go here -->
-                </div>
-                <button type="button" id="editAddActivityBtn" onclick="addEditActivityField()">Add Activity</button><br>
+          <label>Expenses:</label><br />
+          <div id="editExpenses">
+            <!-- Expenses fields go here -->
+          </div>
+          <button
+            type="button"
+            id="editAddExpenseBtn"
+            onclick="addEditExpenseField()"
+          >
+            Add Expense</button
+          ><br />
 
-                <label>Expenses:</label><br>
-                <div id="editExpenses">
-                    <!-- Expenses fields go here -->
-                </div>
-                <button type="button" id="editAddExpenseBtn" onclick="addEditExpenseField()">Add Expense</button><br>
+          <label for="editImageLink">Image Link:</label><br />
+          <input
+            type="text"
+            id="editImageLink"
+            name="imageLink"
+            required
+          /><br />
 
-                <label for="editImageLink">Image Link:</label><br>
-                <input type="text" id="editImageLink" name="imageLink" required><br>
-
-                <input type="submit" id="updateBtn" value="Update Itinerary">
-            </form>
-        </div>
+          <input type="submit" id="updateBtn" value="Update Itinerary" />
+        </form>
+      </div>
     </div>
     <footer>
-        <h5>&copy; Travel Planner, 2023</h5>
+      <h5>&copy; Travel Planner, 2023</h5>
     </footer>
 
     <script>
-        const currentUserId = sessionStorage.getItem('userId') || 'user-id-placeholder';
+      const currentUserId =
+        sessionStorage.getItem("userId") || "user-id-placeholder";
 
-        function populateEditForm(itinerary) {
-            document.getElementById('editDestination').value = itinerary.destination;
-            document.getElementById('editStartDate').value = itinerary.startDate;
-            document.getElementById('editEndDate').value = itinerary.endDate;
-            document.getElementById('editImageLink').value = itinerary.image;
+      function populateEditForm(itinerary) {
+        document.getElementById("editDestination").value =
+          itinerary.destination;
+        document.getElementById("editStartDate").value = itinerary.startDate;
+        document.getElementById("editEndDate").value = itinerary.endDate;
+        document.getElementById("editImageLink").value = itinerary.image;
 
-            // Populate activities
-            const editActivitiesDiv = document.getElementById('editActivities');
-            editActivitiesDiv.innerHTML = '';
-            itinerary.activities.forEach(activity => {
-                const activityEntry = document.createElement('div');
-                activityEntry.className = 'activity-entry';
-                const dateValue = new Date(activity.date).toISOString().split('T')[0];
-                activityEntry.innerHTML = `
+        // Populate activities
+        const editActivitiesDiv = document.getElementById("editActivities");
+        editActivitiesDiv.innerHTML = "";
+        itinerary.activities.forEach((activity) => {
+          const activityEntry = document.createElement("div");
+          activityEntry.className = "activity-entry";
+          const dateValue = new Date(activity.date).toISOString().split("T")[0];
+          activityEntry.innerHTML = `
                     <input type="text" name="editActivityDescription" value="${activity.description}" required>
                     <input type="date" name="editActivityDate" value="${dateValue}" required>
                     <button type="button" onclick="removeEditActivityField(this)">Remove</button>
                 `;
-                editActivitiesDiv.appendChild(activityEntry);
-            });
+          editActivitiesDiv.appendChild(activityEntry);
+        });
 
-            // Populate expenses
-            const editExpensesDiv = document.getElementById('editExpenses');
-            editExpensesDiv.innerHTML = '';
-            itinerary.expenses.forEach(expense => {
-                const expenseEntry = document.createElement('div');
-                expenseEntry.className = 'expense-entry';
-                expenseEntry.innerHTML = `
+        // Populate expenses
+        const editExpensesDiv = document.getElementById("editExpenses");
+        editExpensesDiv.innerHTML = "";
+        itinerary.expenses.forEach((expense) => {
+          const expenseEntry = document.createElement("div");
+          expenseEntry.className = "expense-entry";
+          expenseEntry.innerHTML = `
                     <input type="text" name="editExpenseDescription" value="${expense.description}" required>
                     <input type="number" name="editExpenseAmount" value="${expense.amount}" step="0.01" required>
                     <button type="button" onclick="removeEditExpenseField(this)">Remove</button>
                 `;
-                editExpensesDiv.appendChild(expenseEntry);
-            });
-        }
+          editExpensesDiv.appendChild(expenseEntry);
+        });
+      }
 
-        function updateItinerary(event) {
-            event.preventDefault();
-            // Get itinerary ID from the URL query parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const itineraryId = urlParams.get('id');
-            // Collect updated itinerary data
-            const updatedItinerary = {
-                destination: document.getElementById('editDestination').value,
-                startDate: document.getElementById('editStartDate').value,
-                endDate: document.getElementById('editEndDate').value,
-                image: document.getElementById('editImageLink').value,
-                activities: [],
-                expenses: []
-            };
-            // Collect updated activities
-            document.querySelectorAll('#editActivities .activity-entry').forEach(entry => {
-                const description = entry.querySelector('input[name="editActivityDescription"]').value;
-                const date = entry.querySelector('input[name="editActivityDate"]').value;
-                updatedItinerary.activities.push({ description, date });
-            });
-            // Collect updated expenses
-            document.querySelectorAll('#editExpenses .expense-entry').forEach(entry => {
-                const description = entry.querySelector('input[name="editExpenseDescription"]').value;
-                const amount = entry.querySelector('input[name="editExpenseAmount"]').value;
-                updatedItinerary.expenses.push({ description, amount });
-            });
-            // Send update request to server
-            fetch(`http://localhost:3000/itineraries/${itineraryId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedItinerary)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Itinerary updated:', data);
-                // Redirect to the main page after successful update
-                window.location.href = 'profile.html';
-            })
-            .catch(error => console.error('Error updating itinerary:', error));
-        }
+      function updateItinerary(event) {
+        event.preventDefault();
+        // Get itinerary ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const itineraryId = urlParams.get("id");
+        // Collect updated itinerary data
+        const updatedItinerary = {
+          destination: document.getElementById("editDestination").value,
+          startDate: document.getElementById("editStartDate").value,
+          endDate: document.getElementById("editEndDate").value,
+          image: document.getElementById("editImageLink").value,
+          activities: [],
+          expenses: [],
+        };
+        // Collect updated activities
+        document
+          .querySelectorAll("#editActivities .activity-entry")
+          .forEach((entry) => {
+            const description = entry.querySelector(
+              'input[name="editActivityDescription"]'
+            ).value;
+            const date = entry.querySelector(
+              'input[name="editActivityDate"]'
+            ).value;
+            updatedItinerary.activities.push({ description, date });
+          });
+        // Collect updated expenses
+        document
+          .querySelectorAll("#editExpenses .expense-entry")
+          .forEach((entry) => {
+            const description = entry.querySelector(
+              'input[name="editExpenseDescription"]'
+            ).value;
+            const amount = entry.querySelector(
+              'input[name="editExpenseAmount"]'
+            ).value;
+            updatedItinerary.expenses.push({ description, amount });
+          });
+        // Send update request to server
+        fetch(`http://localhost:3000/itineraries/${itineraryId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedItinerary),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Itinerary updated:", data);
+            // Redirect to the main page after successful update
+            window.location.href = "profile.html";
+          })
+          .catch((error) => console.error("Error updating itinerary:", error));
+      }
 
-        function removeEditActivityField(button) {
-            button.parentElement.remove();
-        }
+      function removeEditActivityField(button) {
+        button.parentElement.remove();
+      }
 
-        function removeEditExpenseField(button) {
-            button.parentElement.remove();
-        }
+      function removeEditExpenseField(button) {
+        button.parentElement.remove();
+      }
 
-        function addEditActivityField() {
-            const editActivitiesDiv = document.getElementById('editActivities');
-            const activityEntry = document.createElement('div');
-            activityEntry.className = 'activity-entry';
-            activityEntry.innerHTML = `
+      function addEditActivityField() {
+        const editActivitiesDiv = document.getElementById("editActivities");
+        const activityEntry = document.createElement("div");
+        activityEntry.className = "activity-entry";
+        activityEntry.innerHTML = `
                 <input type="text" name="editActivityDescription" placeholder="Activity description" required>
                 <input type="date" name="editActivityDate" required>
                 <button type="button" onclick="removeEditActivityField(this)">Remove</button>
             `;
-            editActivitiesDiv.appendChild(activityEntry);
-            updateActivityDateConstraints();
-        }
+        editActivitiesDiv.appendChild(activityEntry);
+        updateActivityDateConstraints();
+      }
 
-        function addEditExpenseField() {
-            const editExpensesDiv = document.getElementById('editExpenses');
-            const expenseEntry = document.createElement('div');
-            expenseEntry.className = 'expense-entry';
-            expenseEntry.innerHTML = `
+      function addEditExpenseField() {
+        const editExpensesDiv = document.getElementById("editExpenses");
+        const expenseEntry = document.createElement("div");
+        expenseEntry.className = "expense-entry";
+        expenseEntry.innerHTML = `
                 <input type="text" name="editExpenseDescription" placeholder="Expense description" required>
                 <input type="number" name="editExpenseAmount" placeholder="Amount" step="0.01" required>
                 <button type="button" onclick="removeEditExpenseField(this)">Remove</button>
             `;
-            editExpensesDiv.appendChild(expenseEntry);
-        }
+        editExpensesDiv.appendChild(expenseEntry);
+      }
 
-        function navigateDashboard() {
-            window.location.href = "home.html";
-        }
+      function navigateDashboard() {
+        window.location.href = "home.html";
+      }
 
-        function updateActivityDateConstraints() {
-            const startDateVal = document.getElementById('editStartDate').value;
-            const endDateVal = document.getElementById('editEndDate').value;
-            document.querySelectorAll('input[name="editActivityDate"]').forEach(input => {
-                input.setAttribute('min', startDateVal);
-                input.setAttribute('max', endDateVal);
-            });
-        }
+      function updateActivityDateConstraints() {
+        const startDateVal = document.getElementById("editStartDate").value;
+        const endDateVal = document.getElementById("editEndDate").value;
+        document
+          .querySelectorAll('input[name="editActivityDate"]')
+          .forEach((input) => {
+            input.setAttribute("min", startDateVal);
+            input.setAttribute("max", endDateVal);
+          });
+      }
 
-        // Load itinerary data when the page is loaded
-        window.addEventListener('DOMContentLoaded', () => {
-            // Get the itinerary ID from the URL query parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const itineraryId = urlParams.get('id');
-            // Fetch itinerary data by ID
-            fetch(`http://localhost:3000/itineraries/${itineraryId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(itinerary => {
-                    // Populate the edit form with itinerary data
-                    populateEditForm(itinerary);
-                    updateActivityDateConstraints();
-                })
-                .catch(error => console.error('Error fetching itinerary data:', error));
+      // Load itinerary data when the page is loaded
+      window.addEventListener("DOMContentLoaded", () => {
+        // Get the itinerary ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const itineraryId = urlParams.get("id");
+        // Fetch itinerary data by ID
+        fetch(`http://localhost:3000/itineraries/${itineraryId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((itinerary) => {
+            // Populate the edit form with itinerary data
+            populateEditForm(itinerary);
+            updateActivityDateConstraints();
+          })
+          .catch((error) =>
+            console.error("Error fetching itinerary data:", error)
+          );
 
-            // Add event listener for the edit form submission
-            document.getElementById('editStartDate').addEventListener('change', updateActivityDateConstraints);
-            document.getElementById('editEndDate').addEventListener('change', updateActivityDateConstraints);
-            document.getElementById('editForm').addEventListener('submit', updateItinerary);
-        });
+        // Add event listener for the edit form submission
+        document
+          .getElementById("editStartDate")
+          .addEventListener("change", updateActivityDateConstraints);
+        document
+          .getElementById("editEndDate")
+          .addEventListener("change", updateActivityDateConstraints);
+        document
+          .getElementById("editForm")
+          .addEventListener("submit", updateItinerary);
+      });
     </script>
-</body>
-
+  </body>
 </html>
-
-           
