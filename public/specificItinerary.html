@@ -18,7 +18,7 @@
         <p id="favoriteCount">Favorite Count: <span id="favoriteCountValue"></span></p>
         <button id="favoriteItinerary" onclick="addFavorite()">Add to Favorite</button>
         <button id="removeFavoriteItinerary" style="display: none;" onclick="removeFavorite()">Remove from Favorite</button>
-        <h1>Itinerary Details</h1>
+        
         <div id="itineraryDetails">
             <!-- Itinerary details will be populated here -->
         </div>
@@ -78,15 +78,26 @@
                 const itineraryDiv = document.getElementById('itineraryDetails');
                 const commentDiv = document.getElementById('comment_feed');
                 // Populate itinerary details
+                // Fetch user details based on the user ID associated with the itinerary
+                const userResponse = await fetch(`http://localhost:3000/user/${itinerary.user}`);
+                if (!userResponse.ok) {
+                    throw new Error(`Failed to fetch user details for itinerary owner`);
+                }
+                const user = await userResponse.json();
+                
+                const destination = document.createElement('h1');
+                destination.textContent = `${itinerary.destination}`;
+                destination.id = 'destination';
+                itineraryDiv.appendChild(destination);
+
+                const ownerNameParagraph = document.createElement('p');
+                ownerNameParagraph.textContent = `Posted by: ${user.fName} ${user.lName}`;
+                itineraryDiv.appendChild(ownerNameParagraph);
+
                 const imageFile = document.createElement('img');
                 imageFile.src = itinerary.image;
                 imageFile.id = 'itineraryImage';
                 itineraryDiv.appendChild(imageFile);
-
-                const destination = document.createElement('h2');
-                destination.textContent = `Destination: ${itinerary.destination}`;
-                destination.id = 'destination';
-                itineraryDiv.appendChild(destination);
 
                 const startDate = document.createElement('p');
                 startDate.textContent = `Start Date: ${itinerary.startDate}`;
