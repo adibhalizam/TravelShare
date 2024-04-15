@@ -103,9 +103,8 @@
                             <p>End Date: ${itinerary.endDate}</p>
                             <p>Duration: ${duration}</p>
                             <p>Total Expense: $${totalExpenses.toFixed(2)}</p>
-                            <!-- include elements for activities and the image -->
-                            <!-- include buttons for editing and deleting the itinerary -->
                             <button class="edit-btn" onclick="editItinerary('${itinerary._id}')">Edit</button>
+                            <button onclick="deleteItinerary('${itinerary._id}')">Delete</button>
                         `;
                         userItinerariesDiv.appendChild(div);
                     });
@@ -215,6 +214,20 @@
         function editItinerary(itineraryId) {
             // Redirect to the edit page with the itinerary ID as a query parameter
             window.location.href = `editSpecificItinerary.html?id=${itineraryId}`;
+        }
+
+        function deleteItinerary(id) {
+            fetch(`http://localhost:3000/itineraries/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete itinerary');
+                }
+                // Refresh the itinerary list after deletion
+                fetchItineraries();
+            })
+            .catch(error => console.error('Error deleting itinerary:', error));
         }
 
         // Set up the initial state of the form and load initial data
