@@ -1,284 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="specificItinerary.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="specificItinerary.css" />
     <title>View Itinerary</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1 id="header">TravelShare Itinerary</h1>
+      <div class="header-container">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          id="map-marker"
+        >
+          <path
+            fill="#F1090A"
+            d="M12,2a8,8,0,0,0-8,8c0,5.4,7.05,11.5,7.35,11.76a1,1,0,0,0,1.3,0C13,21.5,20,15.4,20,10A8,8,0,0,0,12,2Zm0,17.65c-2.13-2-6-6.31-6-9.65a6,6,0,0,1,12,0C18,13.34,14.13,17.66,12,19.65ZM12,6a4,4,0,1,0,4,4A4,4,0,0,0,12,6Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,12Z"
+          ></path>
+        </svg>
+        <h1 id="header">TravelShare</h1>
+        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+      </div>
     </header>
 
     <div id="container">
-        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
-        <p id="favoriteCount">Favorite Count: <span id="favoriteCountValue"></span></p>
-        <button id="favoriteItinerary" onclick="addFavorite()">Add to Favorite</button>
-        <button id="removeFavoriteItinerary" style="display: none;" onclick="removeFavorite()">Remove from Favorite</button>
-        
-        <div id="itineraryDetails">
-            <!-- Itinerary details will be populated here -->
-        </div>
-        <!-- Comment -->
-        <div id="comment_feed">
-            <h3>Comments:</h3>
-        </div>
-        <div id="commentSection">
-            <input type="text" id="comment" placeholder="Add a comment">
-            <button id="comment_btn" onclick="addComment()">Submit</button>
-        </div>
+      <div id="favoriteCount">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          id="heart-alt"
+        >
+          <path
+            fill="#F1090A"
+            d="M20.16,4.61A6.27,6.27,0,0,0,12,4a6.27,6.27,0,0,0-8.16,9.48l7.45,7.45a1,1,0,0,0,1.42,0l7.45-7.45A6.27,6.27,0,0,0,20.16,4.61Zm-1.41,7.46L12,18.81,5.25,12.07a4.28,4.28,0,0,1,3-7.3,4.25,4.25,0,0,1,3,1.25,1,1,0,0,0,1.42,0,4.27,4.27,0,0,1,6,6.05Z"
+          ></path>
+        </svg>
+        <span id="favoriteCountValue"></span>
+      </div>
+      <button id="favoriteItinerary" onclick="addFavorite()">
+        Add to Favorite
+      </button>
+      <button
+        id="removeFavoriteItinerary"
+        style="display: none"
+        onclick="removeFavorite()"
+      >
+        Remove from Favorite
+      </button>
+
+      <div id="itineraryDetails">
+        <!-- Itinerary details will be populated here -->
+      </div>
+      <!-- Comment -->
+      <div id="comment_feed">
+        <h3>Comments:</h3>
+      </div>
+      <div id="commentSection">
+        <input type="text" id="comment" placeholder="Add a comment" />
+        <button id="comment_btn" onclick="addComment()">Submit</button>
+      </div>
     </div>
 
     <footer>
-        <h5 id="footer">&copy; TravelShare, 2023.</h5>
+      <h5 id="footer">&copy; TravelShare, 2023.</h5>
     </footer>
 
     <script>
-        var id;
-        window.onload = async function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            id = urlParams.get('id');
-            getFavoriteItineraries();
-            await fetchItineraryDetails();
-            fetchFavoriteCount();
-        }
+      var id;
+      window.onload = async function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        id = urlParams.get("id");
+        getFavoriteItineraries();
+        await fetchItineraryDetails();
+        fetchFavoriteCount();
+      };
 
-        function navigateDashboard() {
-            window.location.href = "home.html";
-        }
+      function navigateDashboard() {
+        window.location.href = "home.html";
+      }
 
-        function getFavoriteItineraries() {
-            const currentUserId = sessionStorage.getItem('userId');
-            fetch(`http://localhost:3000/getFavoriteItineraries?user=${currentUserId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const isFavorite = data.some(favorite => favorite.itinerary === id);
-                    if (isFavorite) {
-                        document.getElementById('removeFavoriteItinerary').style.display = 'block';
-                        document.getElementById('favoriteItinerary').style.display = 'none';
-                    } else {
-                        document.getElementById('removeFavoriteItinerary').style.display = 'none';
-                        document.getElementById('favoriteItinerary').style.display = 'block';
-                    }
-                })
-                .catch(error => console.error(error));
-        }
-
-        // Fetches and displays the itinerary details
-        async function fetchItineraryDetails() {
-            try {
-                const response = await fetch(`http://localhost:3000/itineraries/${id}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const itinerary = await response.json();
-                const itineraryDiv = document.getElementById('itineraryDetails');
-                const commentDiv = document.getElementById('comment_feed');
-                // Populate itinerary details
-                // Fetch user details based on the user ID associated with the itinerary
-                const userResponse = await fetch(`http://localhost:3000/user/${itinerary.user}`);
-                if (!userResponse.ok) {
-                    throw new Error(`Failed to fetch user details for itinerary owner`);
-                }
-                const user = await userResponse.json();
-                
-                const destination = document.createElement('h1');
-                destination.textContent = `${itinerary.destination}`;
-                destination.id = 'destination';
-                itineraryDiv.appendChild(destination);
-
-                const ownerNameParagraph = document.createElement('p');
-                ownerNameParagraph.textContent = `Posted by: ${user.fName} ${user.lName}`;
-                itineraryDiv.appendChild(ownerNameParagraph);
-
-                const imageFile = document.createElement('img');
-                imageFile.src = itinerary.image;
-                imageFile.id = 'itineraryImage';
-                itineraryDiv.appendChild(imageFile);
-
-                const startDate = document.createElement('p');
-                startDate.textContent = `Start Date: ${itinerary.startDate}`;
-                startDate.id = 'startDate';
-                itineraryDiv.appendChild(startDate);
-
-                const endDate = document.createElement('p');
-                endDate.textContent = `End Date: ${itinerary.endDate}`;
-                endDate.id = 'endDate'; 
-                itineraryDiv.appendChild(endDate);
-
-                const activitiesTitle = document.createElement('h3');
-                activitiesTitle.textContent = 'Activities:';
-                activitiesTitle.id = 'activitiesTitle';
-                itineraryDiv.appendChild(activitiesTitle);
-
-                const activitiesList = document.createElement('ul');
-                activitiesList.id = 'activitiesList';
-                itinerary.activities.forEach(activity => {
-                    const activityItem = document.createElement('li');
-                    const activityDate = new Date(activity.date);
-                    const formattedDate = `${activityDate.getFullYear()}-${(activityDate.getMonth() + 1).toString().padStart(2, '0')}-${activityDate.getDate().toString().padStart(2, '0')}`;
-                    activityItem.textContent = `${activity.description} (Date: ${formattedDate})`;
-                    activitiesList.appendChild(activityItem);
-                });
-                itineraryDiv.appendChild(activitiesList);
-
-                const expensesTitle = document.createElement('h3');
-                expensesTitle.textContent = 'Expenses:';
-                expensesTitle.id = 'expensesTitle';
-                itineraryDiv.appendChild(expensesTitle);
-
-                const expensesList = document.createElement('ul');
-                expensesList.id = 'expensesList';
-                itinerary.expenses.forEach(expense => {
-                    const expenseItem = document.createElement('li');
-                    expenseItem.textContent = `${expense.description}: $${expense.amount.toFixed(2)}`;
-                    expensesList.appendChild(expenseItem);
-                });
-                itineraryDiv.appendChild(expensesList);
-
-                // Display comments
-                // const commentsTitle = document.createElement('h3');
-                // commentsTitle.textContent = 'Comments:';
-                // itineraryDiv.appendChild(commentsTitle);
-
-                // const commentsList = document.createElement('ul');
-                // itinerary.comments.forEach(comment => {
-                //     const commentItem = document.createElement('li');
-                //     commentItem.textContent = `${comment.username}: ${comment.text}`;
-                //     commentsList.appendChild(commentItem);
-                // });
-                // itineraryDiv.appendChild(commentsList);
-                itinerary.comments.forEach(comments => {
-                        const commentFeed = document.createElement('p');
-                        commentFeed.id = `comment_${comments._id}`;
-
-                        const commentWrapper = document.createElement('div');
-                        commentWrapper.setAttribute('class', 'commentWrapper');
-
-
-
-                        
-                        const delComment = document.createElement('button');
-                        delComment.textContent = "Delete";
-                        delComment.id = "del_comment";
-                        delComment.onclick = () => deleteComment(comments._id);
-                        fetch(`http://localhost:3000/user/${comments.user}`)
-                        .then(response => response.json())
-                        .then(user => {
-                            commentFeed.textContent = `${user.fName} ${user.lName}: ${comments.text}`;
-                        })
-                        .catch(error => console.error(error));
-                        commentWrapper.appendChild(commentFeed);
-                        // commentDiv.appendChild(commentFeed);
-                        if(comments.user == sessionStorage.getItem('userId'))
-                            commentWrapper.appendChild(delComment);
-                            // commentDiv.appendChild(delComment);
-                        commentDiv.appendChild(commentWrapper);
-                    });
-
-            } catch (error) {
-                console.error('Error fetching itinerary details:', error);
-                const itineraryDiv = document.getElementById('itineraryDetails');
-                itineraryDiv.textContent = "Error loading itinerary details.";
+      function getFavoriteItineraries() {
+        const currentUserId = sessionStorage.getItem("userId");
+        fetch(
+          `http://localhost:3000/getFavoriteItineraries?user=${currentUserId}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const isFavorite = data.some(
+              (favorite) => favorite.itinerary === id
+            );
+            if (isFavorite) {
+              document.getElementById("removeFavoriteItinerary").style.display =
+                "block";
+              document.getElementById("favoriteItinerary").style.display =
+                "none";
+            } else {
+              document.getElementById("removeFavoriteItinerary").style.display =
+                "none";
+              document.getElementById("favoriteItinerary").style.display =
+                "block";
             }
+          })
+          .catch((error) => console.error(error));
+      }
+
+      // Fetches and displays the itinerary details
+      async function fetchItineraryDetails() {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/itineraries/${id}`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const itinerary = await response.json();
+          const itineraryDiv = document.getElementById("itineraryDetails");
+          const commentDiv = document.getElementById("comment_feed");
+          // Populate itinerary details
+          // Fetch user details based on the user ID associated with the itinerary
+          const userResponse = await fetch(
+            `http://localhost:3000/user/${itinerary.user}`
+          );
+          if (!userResponse.ok) {
+            throw new Error(`Failed to fetch user details for itinerary owner`);
+          }
+          const user = await userResponse.json();
+
+          const destination = document.createElement("h1");
+          destination.textContent = `${itinerary.destination}`;
+          destination.id = "destination";
+          itineraryDiv.appendChild(destination);
+
+          const ownerNameParagraph = document.createElement("p");
+          ownerNameParagraph.textContent = `Posted by: ${user.fName} ${user.lName}`;
+          itineraryDiv.appendChild(ownerNameParagraph);
+
+          const imageFile = document.createElement("img");
+          imageFile.src = itinerary.image;
+          imageFile.id = "itineraryImage";
+          itineraryDiv.appendChild(imageFile);
+
+          const startDate = document.createElement("p");
+          startDate.textContent = `Start Date: ${itinerary.startDate}`;
+          startDate.id = "startDate";
+          itineraryDiv.appendChild(startDate);
+
+          const endDate = document.createElement("p");
+          endDate.textContent = `End Date: ${itinerary.endDate}`;
+          endDate.id = "endDate";
+          itineraryDiv.appendChild(endDate);
+
+          const activitiesTitle = document.createElement("h3");
+          activitiesTitle.textContent = "Activities:";
+          activitiesTitle.id = "activitiesTitle";
+          itineraryDiv.appendChild(activitiesTitle);
+
+          const activitiesList = document.createElement("ul");
+          activitiesList.id = "activitiesList";
+          itinerary.activities.forEach((activity) => {
+            const activityItem = document.createElement("li");
+            const activityDate = new Date(activity.date);
+            const formattedDate = `${activityDate.getFullYear()}-${(
+              activityDate.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, "0")}-${activityDate
+              .getDate()
+              .toString()
+              .padStart(2, "0")}`;
+            activityItem.textContent = `${activity.description} (Date: ${formattedDate})`;
+            activitiesList.appendChild(activityItem);
+          });
+          itineraryDiv.appendChild(activitiesList);
+
+          const expensesTitle = document.createElement("h3");
+          expensesTitle.textContent = "Expenses:";
+          expensesTitle.id = "expensesTitle";
+          itineraryDiv.appendChild(expensesTitle);
+
+          const expensesList = document.createElement("ul");
+          expensesList.id = "expensesList";
+          itinerary.expenses.forEach((expense) => {
+            const expenseItem = document.createElement("li");
+            expenseItem.textContent = `${
+              expense.description
+            }: $${expense.amount.toFixed(2)}`;
+            expensesList.appendChild(expenseItem);
+          });
+          itineraryDiv.appendChild(expensesList);
+
+          // Display comments
+          // const commentsTitle = document.createElement('h3');
+          // commentsTitle.textContent = 'Comments:';
+          // itineraryDiv.appendChild(commentsTitle);
+
+          // const commentsList = document.createElement('ul');
+          // itinerary.comments.forEach(comment => {
+          //     const commentItem = document.createElement('li');
+          //     commentItem.textContent = `${comment.username}: ${comment.text}`;
+          //     commentsList.appendChild(commentItem);
+          // });
+          // itineraryDiv.appendChild(commentsList);
+          itinerary.comments.forEach((comments) => {
+            const commentFeed = document.createElement("p");
+            commentFeed.id = `comment_${comments._id}`;
+
+            const commentWrapper = document.createElement("div");
+            commentWrapper.setAttribute("class", "commentWrapper");
+
+            const delComment = document.createElement("button");
+            delComment.textContent = "Delete";
+            delComment.id = "del_comment";
+            delComment.onclick = () => deleteComment(comments._id);
+            fetch(`http://localhost:3000/user/${comments.user}`)
+              .then((response) => response.json())
+              .then((user) => {
+                commentFeed.textContent = `${user.fName} ${user.lName}: ${comments.text}`;
+              })
+              .catch((error) => console.error(error));
+            commentWrapper.appendChild(commentFeed);
+            // commentDiv.appendChild(commentFeed);
+            if (comments.user == sessionStorage.getItem("userId"))
+              commentWrapper.appendChild(delComment);
+            // commentDiv.appendChild(delComment);
+            commentDiv.appendChild(commentWrapper);
+          });
+        } catch (error) {
+          console.error("Error fetching itinerary details:", error);
+          const itineraryDiv = document.getElementById("itineraryDetails");
+          itineraryDiv.textContent = "Error loading itinerary details.";
         }
+      }
 
-        function addComment() {
-            const comment = document.getElementById("comment").value;
-            const userId = sessionStorage.getItem('userId');
+      function addComment() {
+        const comment = document.getElementById("comment").value;
+        const userId = sessionStorage.getItem("userId");
 
-            fetch(`http://localhost:3000/itineraries/${id}/addComment`, {
-                method: 'PUT',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify({ commentText: comment, userId: userId }),
-            })
-            .then(response => response.json())
-            .then(commentData => {
-                console.log('Comment successfully posted:', commentData);
-                location.reload(); // Refresh the page to display the new comment
-            })
-            .catch(error => console.error('Error adding comment:', error));
-        }
+        fetch(`http://localhost:3000/itineraries/${id}/addComment`, {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ commentText: comment, userId: userId }),
+        })
+          .then((response) => response.json())
+          .then((commentData) => {
+            console.log("Comment successfully posted:", commentData);
+            location.reload(); // Refresh the page to display the new comment
+          })
+          .catch((error) => console.error("Error adding comment:", error));
+      }
 
-        function deleteComment(commentId) {
-            fetch(`http://localhost:3000/itineraries/${id}/deleteComment/${commentId}`, {
-                method: 'PUT',
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                location.reload();
-            })
-            .catch(error => console.error(error));
-        }
+      function deleteComment(commentId) {
+        fetch(
+          `http://localhost:3000/itineraries/${id}/deleteComment/${commentId}`,
+          {
+            method: "PUT",
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            location.reload();
+          })
+          .catch((error) => console.error(error));
+      }
 
-        function addFavorite() {
-            const favoriteData = {
-                user: sessionStorage.getItem('userId'),
-                itinerary: id
-            };
+      function addFavorite() {
+        const favoriteData = {
+          user: sessionStorage.getItem("userId"),
+          itinerary: id,
+        };
 
-            fetch('http://localhost:3000/addFavoriteItinerary', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(favoriteData)
-            })
-            .then(response => response.text())
-            .then(text => {
-                console.log(text);
-                document.getElementById('favoriteItinerary').style.display = "none";
-                document.getElementById('removeFavoriteItinerary').style.display = "block";
-                location.reload();
-            })
-            .catch(error => console.error(error));
-        }
+        fetch("http://localhost:3000/addFavoriteItinerary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(favoriteData),
+        })
+          .then((response) => response.text())
+          .then((text) => {
+            console.log(text);
+            document.getElementById("favoriteItinerary").style.display = "none";
+            document.getElementById("removeFavoriteItinerary").style.display =
+              "block";
+            location.reload();
+          })
+          .catch((error) => console.error(error));
+      }
 
-        function removeFavorite() {
-            const favoriteData = {
-                user: sessionStorage.getItem('userId'),
-                itinerary: id
-            };
+      function removeFavorite() {
+        const favoriteData = {
+          user: sessionStorage.getItem("userId"),
+          itinerary: id,
+        };
 
-            fetch('http://localhost:3000/removeFavoriteItinerary', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(favoriteData)
-            })
-            .then(response => response.text())
-            .then(text => {
-                console.log(text);
-                document.getElementById('favoriteItinerary').style.display = "block";
-                document.getElementById('removeFavoriteItinerary').style.display = "none";
-                location.reload();
-            })
-            .catch(error => console.error(error));
-        }
+        fetch("http://localhost:3000/removeFavoriteItinerary", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(favoriteData),
+        })
+          .then((response) => response.text())
+          .then((text) => {
+            console.log(text);
+            document.getElementById("favoriteItinerary").style.display =
+              "block";
+            document.getElementById("removeFavoriteItinerary").style.display =
+              "none";
+            location.reload();
+          })
+          .catch((error) => console.error(error));
+      }
 
-        function fetchFavoriteCount() {
-            fetch(`http://localhost:3000/getFavoriteCount/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Update the favorite count value
-                    const favoriteCountValue = document.getElementById('favoriteCountValue');
-                    favoriteCountValue.textContent = data.favoriteCount;
-                })
-                .catch(error => console.error(error));
-        }
+      function fetchFavoriteCount() {
+        fetch(`http://localhost:3000/getFavoriteCount/${id}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Update the favorite count value
+            const favoriteCountValue =
+              document.getElementById("favoriteCountValue");
+            favoriteCountValue.textContent = data.favoriteCount;
+          })
+          .catch((error) => console.error(error));
+      }
 
-        function navigatePage() {
-            window.location.href = 'mainPage.html';
-        }
+      function navigatePage() {
+        window.location.href = "mainPage.html";
+      }
     </script>
-
-</body>
-
+  </body>
 </html>

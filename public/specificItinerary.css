@@ -2,169 +2,211 @@
 
 /* Body styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
 }
 
 /* Header styles */
 header {
-    background-color: #343a40;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
+  background-color: #343a40;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.header-container {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  margin: 0 20px; /* Add margin on both sides */
+}
+
+/* Adjust the size of the SVG icon */
+#map-marker {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px; /* Add some margin between the icon and the heading */
+}
+
+/* Move the Main Page button to the left */
+#mainBtn {
+  margin-left: auto; /* Push the button to the leftmost position */
+  background-color: #004e89;
 }
 
 h1 {
-    margin: 0;
+  margin: 0;
 }
 
 /* Container styles */
 #container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the favoriteCount container */
+#favoriteCount {
+  background-color: #343a40;
+  padding: 5px 10px; /* Add padding */
+  border-radius: 20%; /* Add border radius for rounded corners */
+  display: inline-flex; /* Display as inline-flex to adjust size based on content */
+  align-items: center; /* Align items vertically in the center */
+}
+
+/* Styles for the SVG icon */
+#heart-alt {
+  width: 20px; /* Adjust width as needed */
+  height: 20px; /* Adjust height as needed */
+  fill: #f1090a; /* Fill color for the heart icon */
+  margin-right: 5px; /* Add margin between the icon and the text */
+}
+
+/* Styles for the favorite count value */
+#favoriteCountValue {
+  color: #fff; /* Text color */
+  font-weight: bold; /* Bold font weight */
 }
 
 /* Button styles */
 button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  background-color: #004e89;
+  color: #fff;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #c00021;
 }
 
 /* Itinerary details styles */
 #itineraryDetails {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 #itineraryImage {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #destination {
-    margin: 0;
-    color: #333;
-    margin-bottom: 10px;
-    font-size: xx-large;
+  margin: 0;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: xx-large;
 }
 
 #startDate,
 #endDate {
-    margin: 5px 0;
-    color: #666;
-    font-size: 16px;
+  margin: 5px 0;
+  color: #666;
+  font-size: 16px;
 }
 
 #activitiesTitle,
 #expensesTitle {
-    margin: 15px 0 10px;
-    color: #333;
-    font-size: 20px;
+  margin: 15px 0 10px;
+  color: #333;
+  font-size: 20px;
 }
 
 #activitiesList,
 #expensesList {
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 #activitiesList li,
 #expensesList li {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 #activitiesList li,
 #expensesList li {
-    padding-left: 1em;
+  padding-left: 1em;
 }
 
 /* Comment section styles */
 #commentSection {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
 }
 
 #comment {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-right: 10px; /* Added margin to separate input and button */
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 10px; /* Added margin to separate input and button */
 }
 
 #comment_btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
-    transition: background-color 0.3s ease;
-    margin: 0;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #004e89;
+  color: #fff;
+  transition: background-color 0.3s ease;
+  margin: 0;
 }
 
 #comment_btn:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Comment feed styles */
 .commentWrapper {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .commentWrapper p {
-    margin: 0;
-    margin-right: 10px;
-    padding: 10px;
-    background-color: #C0C0C0;
-    border-radius: 8px;
-    font-size: 16px;
-    flex: 1;
+  margin: 0;
+  margin-right: 10px;
+  padding: 10px;
+  background-color: #c0c0c0;
+  border-radius: 8px;
+  font-size: 16px;
+  flex: 1;
 }
 
 #del_comment {
-    padding: 8px 16px;
-    background-color: #dc3545;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0;
+  padding: 8px 16px;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0;
 }
 
 #del_comment:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 /* Footer styles */
 footer {
-    text-align: center;
-    margin-top: 30px;
-    padding: 10px 0;
-    background-color: #343a40;
-    color: #fff;
-    border-radius: 0 0 8px 8px;
+  text-align: center;
+  margin-top: 30px;
+  padding: 10px 0;
+  background-color: #343a40;
+  color: #fff;
+  border-radius: 0 0 8px 8px;
 }
