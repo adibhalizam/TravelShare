@@ -106,6 +106,20 @@ app.post('/itineraries', async (req, res) => {
     }
 });
 
+app.get('/itineraries/:id', async (req, res) => {
+    const itineraryId = req.params.id;
+    try {
+        const itinerary = await Itinerary.findById(itineraryId).exec();
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        res.json(itinerary);
+    } catch (err) {
+        console.error('Error finding itinerary by ID:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 //Mongoose connection
 mongoose.connect('mongodb+srv://adibhalizam:adibhalizam@travelsharemern-cluster.rlsukhf.mongodb.net/Node-API')
     .then(() => {
