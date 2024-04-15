@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <header>
+        <h1>TravelShare - Edit Profile</h1>
+    </header>
+
+    <div id="editProfileContainer">
+        <form id="editProfileForm">
+            <label for="fName">First Name:</label><br>
+            <input type="text" id="fName" name="fName" required><br>
+
+            <label for="lName">Last Name:</label><br>
+            <input type="text" id="lName" name="lName" required><br>
+
+            <label for="password">New Password (optional):</label><br>
+            <input type="password" id="password" name="password"><br>
+
+            <input type="submit" value="Update Profile">
+        </form>
+
+        <button onclick="navigateBack()">Cancel</button>
+    </div>
+
+    <footer>
+        <h5>&copy; Travel Planner, 2023</h5>
+    </footer>
+
+    <script>
+        async function navigateBack() {
+            window.location.href = "profile.html";  // Redirect back to the profile page
+        }
+
+        async function fetchCurrentUserData() {
+            const userId = sessionStorage.getItem('userId');
+            if (!userId) {
+                alert('You must be logged in to edit your profile.');
+                navigateBack();
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/user/${userId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const userData = await response.json();
+
+                document.getElementById('fName').value = userData.fName;
+                document.getElementById('lName').value = userData.lName;
+                // The password field is intentionally not populated for security reasons
+
+            } catch (error) {
+                console.error('Error fetching current user data:', error);
+                // Handle errors (e.g. by showing a message to the user)
+            }
+        }
+
+        document.getElementById('editProfileForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const userId = sessionStorage.getItem('userId');
+            const updatedData = {
+                fName: document.getElementById('fName').value,
+                lName: document.getElementById('lName').value,
+                // Include password only if it's being changed
+                ...(document.getElementById('password').value && { password: document.getElementById('password').value })
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/user/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Additional security measures should be implemented such as authorization headers
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('HTTP error! Status: ' + response.status);
+                }
+
+                const result = await response.json();
+                console.log('Profile updated successfully:', result);
+                navigateBack(); // Redirect back to the profile page
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                // Handle errors (e.g. by showing a message to the user)
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', fetchCurrentUserData);
+    </script>
+</body>
+</html>
