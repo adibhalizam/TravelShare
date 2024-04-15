@@ -234,6 +234,43 @@ app.put('/itineraries/:id/deleteComment/:commentId', async (req, res) => {
     }
 });
 
+app.post('/itineraries/:id/like', async (req, res) => {
+    const itineraryId = req.params.id;
+    const userId = req.body.userId; // The ID of the user liking the itinerary
+    const like = req.body.like; // Boolean indicating whether the action is a like (true) or unlike (false)
+
+    try {
+        const itinerary = await Itinerary.findById(itineraryId);
+
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        
+        // Check if the user has already liked the itinerary
+        const index = itinerary.likes.indexOf(userId);
+
+        // Toggle the user's like status
+        if (like) {
+            // If the user is liking the itinerary and hasn't liked it before
+            if (index === -1) {
+                itinerary.likes.push(userId);
+            }
+        } else {
+            // If the user is unliking the itinerary and has liked it before
+            if (index > -1) {
+                itinerary.likes.splice(index, 1);
+            }
+        }
+        
+        // Save the updated itinerary
+        await itinerary.save();
+        res.status(200).json(itinerary);
+    } catch (error) {
+        console.error('Error liking/unliking itinerary:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 //Mongoose connection
 mongoose.connect('mongodb+srv://adibhalizam:adibhalizam@travelsharemern-cluster.rlsukhf.mongodb.net/Node-API')
     .then(() => {
