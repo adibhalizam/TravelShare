@@ -11,7 +11,7 @@ body {
 /* Header styles */
 /* Header styles */
 header {
-  background-color: #004e89;
+  background-color: #343a40;
   color: #fff;
   padding: 20px 0;
 }
@@ -33,7 +33,7 @@ header {
 /* Move the Main Page button to the left */
 #mainBtn {
   margin-left: auto; /* Push the button to the leftmost position */
-  background-color: #c00021;
+  background-color: #004e89;
 }
 
 h1 {
