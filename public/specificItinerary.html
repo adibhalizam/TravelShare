@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Itinerary</title>
-    <script src="https://kit.fontawesome.com/2c4b6f2b7b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -14,13 +13,14 @@
     </header>
 
     <div id="container">
-        <button onclick="navigatePage()"><i class="fa-solid fa-house"></i> Main Page</button>
+        <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+        <p id="favoriteCount">Favorite Count: <span id="favoriteCountValue"></span></p>
+        <button id="favoriteItinerary" onclick="addFavorite()">Add to Favorite</button>
+        <button id="removeFavoriteItinerary" style="display: none;" onclick="removeFavorite()">Remove from Favorite</button>
         <h1>Itinerary Details</h1>
         <div id="itineraryDetails">
             <!-- Itinerary details will be populated here -->
         </div>
-        <button id="likeButton" class="like-button">Like</button>
-        <span id="likeCount">0</span> likes
         <!-- Comment -->
         <input type="text" id="comment" placeholder="Add a comment"></input>
         <button id="comment_btn" onclick="addComment()">Submit</button>
@@ -38,7 +38,30 @@
         window.onload = async function () {
             const urlParams = new URLSearchParams(window.location.search);
             id = urlParams.get('id');
+            getFavoriteItineraries();
             await fetchItineraryDetails();
+            fetchFavoriteCount();
+        }
+
+        function navigateDashboard() {
+            window.location.href = "home.html";
+        }
+
+        function getFavoriteItineraries() {
+            const currentUserId = sessionStorage.getItem('userId');
+            fetch(`http://localhost:3000/getFavoriteItineraries?user=${currentUserId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const isFavorite = data.some(favorite => favorite.itinerary === id);
+                    if (isFavorite) {
+                        document.getElementById('removeFavoriteItinerary').style.display = 'block';
+                        document.getElementById('favoriteItinerary').style.display = 'none';
+                    } else {
+                        document.getElementById('removeFavoriteItinerary').style.display = 'none';
+                        document.getElementById('favoriteItinerary').style.display = 'block';
+                    }
+                })
+                .catch(error => console.error(error));
         }
 
         // Fetches and displays the itinerary details
@@ -172,50 +195,62 @@
             .catch(error => console.error(error));
         }
 
-        function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
+        function addFavorite() {
+            const favoriteData = {
+                user: sessionStorage.getItem('userId'),
+                itinerary: id
+            };
+
+            fetch('http://localhost:3000/addFavoriteItinerary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(favoriteData)
+            })
+            .then(response => response.text())
+            .then(text => {
+                console.log(text);
+                document.getElementById('favoriteItinerary').style.display = "none";
+                document.getElementById('removeFavoriteItinerary').style.display = "block";
+                location.reload();
+            })
+            .catch(error => console.error(error));
         }
 
-        const likeButton = document.getElementById('likeButton');
-        const likeCountSpan = document.getElementById('likeCount');
-        let isLiked = false;
-        let likeCount = 0;
+        function removeFavorite() {
+            const favoriteData = {
+                user: sessionStorage.getItem('userId'),
+                itinerary: id
+            };
 
-        function toggleLikeItinerary() {
-        const itineraryId = getQueryParam('id');
-        const currentUserId = sessionStorage.getItem('userId') || 'user-id-placeholder'; // Use 'currentUserId' instead of 'userId'
-
-        // Toggle the isLiked state 
-        isLiked = !isLiked;
-        // Optimistically update the UI
-        likeCountSpan.textContent = isLiked ? ++likeCount : --likeCount;
-        likeButton.classList.toggle('liked', isLiked);
-
-        fetch(`http://localhost:3000/itineraries/${itineraryId}/like`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // Include other headers such as Authorization if needed
-            },
-            body: JSON.stringify({ userId: currentUserId, like: isLiked }) // Corrected variable name here
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('Error updating like status:', error);
-            // Revert the optimistic UI update on error
-            likeCountSpan.textContent = isLiked ? --likeCount : ++likeCount;
-            likeButton.classList.toggle('liked', isLiked);
-            isLiked = !isLiked;
-        });
+            fetch('http://localhost:3000/removeFavoriteItinerary', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(favoriteData)
+            })
+            .then(response => response.text())
+            .then(text => {
+                console.log(text);
+                document.getElementById('favoriteItinerary').style.display = "block";
+                document.getElementById('removeFavoriteItinerary').style.display = "none";
+                location.reload();
+            })
+            .catch(error => console.error(error));
         }
 
-        likeButton.addEventListener('click', toggleLikeItinerary);
+        function fetchFavoriteCount() {
+            fetch(`http://localhost:3000/getFavoriteCount/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update the favorite count value
+                    const favoriteCountValue = document.getElementById('favoriteCountValue');
+                    favoriteCountValue.textContent = data.favoriteCount;
+                })
+                .catch(error => console.error(error));
+        }
 
         function navigatePage() {
             window.location.href = 'mainPage.html';

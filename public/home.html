@@ -16,6 +16,7 @@
 <body>
 
     <h1>Itineraries List</h1>
+    <button id="mainBtn" onclick="navigateDashboard()">Profile</button>
     <div id="userItineraries"></div>
 
     <script>
@@ -29,6 +30,10 @@
 
         function calculateTotalExpenses(expensesArray) {
             return expensesArray.reduce((total, expense) => total + expense.amount, 0);
+        }
+
+        function navigateDashboard() {
+            window.location.href = "profile.html";
         }
 
         window.onload = function() {
