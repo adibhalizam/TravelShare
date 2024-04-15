@@ -26,6 +26,9 @@
           <button id="profileBtn" onclick="navigateDashboard()">Profile</button>
           <button id="logoutBtn" onclick="logout()">Logout</button>
         </div>
+
+        <div id="greetingMessage"></div>
+
       </div>
       <!-- Add search form -->
       <div id="searchContainer">
@@ -158,6 +161,24 @@
 
       window.onload = function () {
         const itinerariesContainer = document.getElementById("userItineraries"); // Make sure you have a container with this ID
+        const fullName = sessionStorage.getItem('fullName');
+
+        // Get the greeting message container element
+        const greetingMessageContainer = document.getElementById("greetingMessage");
+
+        // Check if both first name and last name are available
+        if (fullName) {
+            // Create the greeting message
+            const greetingMessage = document.createElement("p");
+            greetingMessage.textContent = `Hello ${fullName}`;
+        
+            // Append the greeting message to the container
+            greetingMessageContainer.appendChild(greetingMessage);
+        } else {
+            // If user information is not available, display a default message
+            greetingMessageContainer.textContent = "Hello User";
+        }
+
 
         fetch("http://localhost:3000/itineraries")
           .then((response) => response.json())
