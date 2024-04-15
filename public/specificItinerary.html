@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Itinerary</title>
+    <style>
+        #itineraryImage {
+          width: 100%;
+          max-width: 400px;
+          height: auto;
+          margin-bottom: 20px;
+        }
+        #viewActivities, #viewExpenses {
+          list-style-type: none;
+        }
+        /* Add more styles as needed */
+    </style>
+</head>
+
+<body>
+
+    <h1>Itinerary Details</h1>
+    <div id="itineraryDetails">
+        <strong>Destination:</strong> <span id="viewDestination"></span><br>
+        <img id="itineraryImage" src="" alt="Itinerary"></span><br>
+        <strong>Start Date:</strong> <span id="viewStartDate"></span><br>
+        <strong>End Date:</strong> <span id="viewEndDate"></span><br>
+
+        <strong>Activities:</strong>
+        <ul id="viewActivities">
+            <!-- Activities list will be populated here -->
+        </ul>
+
+        <strong>Expenses:</strong>
+        <ul id="viewExpenses">
+            <!-- Expenses list will be populated here -->
+        </ul>
+
+    </div>
+
+    <button onclick="goBack()">Back to List</button>
+
+    <script>
+        // Helper function to parse the query string
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Fetches and displays the itinerary details
+        function fetchItineraryDetails() {
+            const itineraryId = getQueryParam('id');
+            if (!itineraryId) {
+                document.getElementById('itineraryDetails').innerHTML = "Itinerary ID not provided.";
+                return;
+            }
+
+            fetch(`http://localhost:3000/itineraries/${itineraryId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(itinerary => {
+                    document.getElementById('viewDestination').textContent = itinerary.destination;
+                    document.getElementById('viewStartDate').textContent = itinerary.startDate;
+                    document.getElementById('viewEndDate').textContent = itinerary.endDate;
+                    document.getElementById('itineraryImage').src = itinerary.image;
+
+                    const viewActivities = document.getElementById('viewActivities');
+                    itinerary.activities.forEach(activity => {
+                        const dateString = activity.date.split('T')[0]; // Just the date part
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${dateString}: ${activity.description}`;
+                        viewActivities.appendChild(listItem);
+                    });
+
+                    const viewExpenses = document.getElementById('viewExpenses');
+                    itinerary.expenses.forEach(expense => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${expense.description}: $${parseFloat(expense.amount).toFixed(2)}`;
+                        viewExpenses.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching itinerary details:', error);
+                    document.getElementById('itineraryDetails').innerHTML = "Error loading itinerary details.";
+                });
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Load the itinerary details when the page is fully loaded
+        window.addEventListener('DOMContentLoaded', fetchItineraryDetails);
+    </script>
+
+</body>
+
+</html>
