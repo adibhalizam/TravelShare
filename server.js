@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const Itinerary = require('./models/itineraryModel');
 const User = require('./models/userModel');
+const FavoriteItinerary = require('./models/favouriteItineraryModel');
+
 
 app.use(cors({origin: '*'}));
 app.use(express.json());
@@ -267,6 +269,53 @@ app.post('/itineraries/:id/like', async (req, res) => {
         res.status(200).json(itinerary);
     } catch (error) {
         console.error('Error liking/unliking itinerary:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/addFavoriteItinerary', async (req, res) => {
+    try {
+        const favorite = await FavoriteItinerary.create(req.body);
+        res.status(200).json(favorite);
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+app.delete('/removeFavoriteItinerary', async (req, res) => {
+    try {
+        const favorite = await FavoriteItinerary.findOneAndDelete(req.body);
+        res.status(200).json(favorite);
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get favorite itineraries for a user
+app.get('/getFavoriteItineraries', async (req, res) => {
+    const { user } = req.query; // User ID
+
+    try {
+        // Find all favorite itineraries for the user
+        const favoriteItineraries = await FavoriteItinerary.find({ user });
+
+        res.json(favoriteItineraries);
+    } catch (error) {
+        console.error('Error fetching favorite itineraries:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/getFavoriteCount/:itineraryId', async (req, res) => {
+    const { itineraryId } = req.params;
+
+    try {
+        const favoriteCount = await FavoriteItinerary.countDocuments({ itinerary: itineraryId });
+        res.json({ favoriteCount });
+    } catch (error) {
+        console.error('Error fetching favorite count:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
