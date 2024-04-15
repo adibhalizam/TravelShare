@@ -320,6 +320,35 @@ app.get('/getFavoriteCount/:itineraryId', async (req, res) => {
     }
 });
 
+//Edit profile
+app.put('/user/:id', async (req, res) => {
+    try {
+        const { fName, lName, password } = req.body;
+        const userUpdates = { fName, lName };
+
+        if (password) {
+            userUpdates.password = password;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            userUpdates,
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond without sending sensitive data
+        const { password: _, ...userData } = updatedUser._doc;
+        res.json(userData);
+    } catch (error) {
+        console.error('Update user error:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 //Mongoose connection
 mongoose.connect('mongodb+srv://adibhalizam:adibhalizam@travelsharemern-cluster.rlsukhf.mongodb.net/Node-API')
     .then(() => {
