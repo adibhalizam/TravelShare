@@ -11,7 +11,6 @@ body {
 header {
   background-color: #343a40;
   padding: 10px;
-  text-align: center;
 }
 
 #headercontainer {
@@ -34,13 +33,18 @@ header {
   margin-right: 10px; /* Add some margin between the icon and the heading */
 }
 
+#greetingMessage {
+  margin-left: 10px;
+}
+
 h1 {
   margin: 0;
 }
 
 #searchContainer input[type="text"] {
-  width: 200px;
-  padding: 10px;
+  margin-left: 50px;
+  width: 300px; /* Increase the width as needed */
+  padding: 10px 30px; /* Adjust padding horizontally and vertically */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
