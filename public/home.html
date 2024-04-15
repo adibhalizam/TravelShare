@@ -14,12 +14,94 @@
         <button id="profileBtn" onclick="navigateDashboard()">Profile</button>
         <button id="logoutBtn" onclick="logout()">Logout</button> <!-- Add Logout button -->
     </div>
+
+    <!-- Add search form -->
+    <div id="searchContainer">
+        <form id="searchForm" onsubmit="searchItineraries(event)">
+            <input type="text" id="destinationInput" placeholder="Enter destination">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
     <div id="userItineraries"></div>
     <footer>
         <h5>&copy; Travel Planner, 2023</h5>
     </footer>
     <script>
         const itinerariesContainer = document.getElementById('itineraries-container');
+
+        function searchItineraries(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const destination = document.getElementById('destinationInput').value.trim();
+
+            fetch('http://localhost:3000/itineraries')
+                .then(response => response.json())
+                .then(data => {
+                    const filteredItineraries = data.filter(itinerary => {
+                        // Check if the itinerary destination matches the search criteria
+                        const destinationMatch = !destination || itinerary.destination.toLowerCase().includes(destination.toLowerCase());
+                        return destinationMatch;
+                    });
+
+                    renderItineraries(filteredItineraries);
+                })
+                .catch(error => {
+                    console.error('Error fetching itineraries:', error);
+                });
+        }
+
+        // Function to render itineraries on the page
+        function renderItineraries(itineraries) {
+            const itinerariesContainer = document.getElementById('userItineraries');
+            itinerariesContainer.innerHTML = ''; // Clear previous content
+
+            itineraries.forEach(itinerary => {
+                const duration = calculateDuration(itinerary.startDate, itinerary.endDate);
+                const totalExpenses = calculateTotalExpenses(itinerary.expenses);
+
+                // Create div for each itinerary similar to recipe
+                const oneItinerary = document.createElement('div');
+                oneItinerary.setAttribute('class', 'eachItinerary');
+
+                const imageDiv = document.createElement('div');
+                imageDiv.setAttribute('class', 'imageDiv');
+                const imageFile = document.createElement('img');
+                imageFile.src = itinerary.image; // assuming there's an 'image' property
+                imageDiv.appendChild(imageFile);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.setAttribute('class', 'contentDiv');
+                const itineraryParagraph = document.createElement('p');
+                itineraryParagraph.textContent = `Destination: ${itinerary.destination}`;
+
+                const durationParagraph = document.createElement('p');
+                durationParagraph.textContent = `Duration: ${duration}`;
+
+                const expensesParagraph = document.createElement('p');
+                expensesParagraph.textContent = `Total Expense: $${totalExpenses.toFixed(2)}`;
+
+                const viewButton = document.createElement('button');
+                viewButton.textContent = 'View Itinerary';
+                // Update the button click event for your itineraries
+                viewButton.onclick = function() { 
+                    window.location.href = `specificItinerary.html?id=${itinerary._id}`;
+                };
+
+                // Append paragraphs and button to the contentDiv
+                contentDiv.appendChild(itineraryParagraph);
+                contentDiv.appendChild(durationParagraph);
+                contentDiv.appendChild(expensesParagraph);
+                contentDiv.appendChild(viewButton);
+
+                // Append imageDiv and contentDiv to the main itinerary div (oneItinerary)
+                oneItinerary.appendChild(imageDiv);
+                oneItinerary.appendChild(contentDiv);
+
+                // Append the main itinerary div to the container
+                itinerariesContainer.appendChild(oneItinerary);
+            });
+        }
 
         function calculateDuration(startDate, endDate) {
             const start = new Date(startDate);
