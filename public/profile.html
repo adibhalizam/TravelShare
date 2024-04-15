@@ -301,18 +301,19 @@
             const itinerariesDiv = document.getElementById(
               "userFavouriteItineraries"
             );
-            let itineraryId = [];
+            //let itineraryId = [];
             data.forEach(async (itinerary) => {
               const response = await fetch(
                 `http://localhost:3000/itineraries/${itinerary.itinerary}`
               );
               const itineraryData = await response.json();
               const itineraryParagraph = document.createElement("li");
+              itineraryParagraph.classList.add("fav-itinerary");itineraryParagraph.classList.add("fav-itinerary");
               itineraryParagraph.textContent = itineraryData.destination; //Display only title here
-              itineraryId.push({ id: itinerary._id });
+              //itineraryId.push({ id: itinerary._id });
               const viewButton = document.createElement("button");
               viewButton.textContent = "View Itinerary";
-              viewButton.id = "viewBtn";
+              viewButton.classList.add("view-btn");
               // Allows the button to redirect to specificRecipe.html with the recipe id as a query parameter
               viewButton.onclick = function () {
                 window.location.href = `specificItinerary.html?id=${itinerary.itinerary}`;
