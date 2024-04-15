@@ -20,6 +20,7 @@
         </svg>
         <h1 id="header">TravelShare</h1>
         <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+        <button id="editProfileBtn" onclick="navigateToEditProfile()">Edit Profile</button>
       </div>
     </header>
     <div id="container">
@@ -213,6 +214,11 @@
 
       function navigateDashboard() {
         window.location.href = "home.html";
+      }
+
+      function navigateToEditProfile() {
+            // Navigate to the editProfile.html page
+            window.location.href = "editProfile.html";
       }
 
       function createItinerary(event) {
