@@ -1,0 +1,109 @@
+/* home.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+#mainBtn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#mainBtn:hover {
+    background-color: #45a049;
+}
+
+#userItineraries {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.eachItinerary {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.eachItinerary:hover {
+    transform: translateY(-5px);
+}
+
+.imageDiv {
+    height: 200px;
+    overflow: hidden;
+}
+
+.imageDiv img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.contentDiv {
+    padding: 15px;
+}
+
+/* Button container styles */
+#buttonContainer {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Button styles */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Button container styles */
+#buttonContainer {
+    padding: 20px;
+}
+
+/* Profile and Logout button styles */
+#profileBtn,
+#logoutBtn {
+    background-color: #008CBA; /* Blue */
+}
+
+#profileBtn:hover,
+#logoutBtn:hover {
+    background-color: #0073e6; /* Darker blue */
+}
+

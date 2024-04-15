@@ -93,11 +93,14 @@
                     }
 
                     itineraries.forEach(itinerary => {
+                        // Create container div for the itinerary
+                        let itineraryContainer = document.createElement('div');
+                        itineraryContainer.className = 'itinerary-box';
+
                         // Create elements for each itinerary
-                        let div = document.createElement('div');
                         const duration = calculateDuration(itinerary.startDate, itinerary.endDate);
                         const totalExpenses = calculateTotalExpenses(itinerary.expenses);
-                        div.innerHTML = `
+                        itineraryContainer.innerHTML = `
                             <h3>${itinerary.destination}</h3>
                             <p>Start Date: ${itinerary.startDate}</p>
                             <p>End Date: ${itinerary.endDate}</p>
@@ -106,7 +109,9 @@
                             <button class="edit-btn" onclick="editItinerary('${itinerary._id}')">Edit</button>
                             <button onclick="deleteItinerary('${itinerary._id}')">Delete</button>
                         `;
-                        userItinerariesDiv.appendChild(div);
+                        
+                        // Append the itinerary container to the userItinerariesDiv
+                        userItinerariesDiv.appendChild(itineraryContainer);
                     });
                 })
                 .catch(error => console.error('Error fetching user itineraries:', error));

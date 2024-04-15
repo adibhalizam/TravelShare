@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="specificItinerary.css">
     <title>View Itinerary</title>
 </head>
 
@@ -22,10 +23,12 @@
             <!-- Itinerary details will be populated here -->
         </div>
         <!-- Comment -->
-        <input type="text" id="comment" placeholder="Add a comment"></input>
-        <button id="comment_btn" onclick="addComment()">Submit</button>
         <div id="comment_feed">
             <h3>Comments:</h3>
+        </div>
+        <div id="commentSection">
+            <input type="text" id="comment" placeholder="Add a comment">
+            <button id="comment_btn" onclick="addComment()">Submit</button>
         </div>
     </div>
 
@@ -77,25 +80,31 @@
                 // Populate itinerary details
                 const imageFile = document.createElement('img');
                 imageFile.src = itinerary.image;
+                imageFile.id = 'itineraryImage';
                 itineraryDiv.appendChild(imageFile);
 
                 const destination = document.createElement('h2');
                 destination.textContent = `Destination: ${itinerary.destination}`;
+                destination.id = 'destination';
                 itineraryDiv.appendChild(destination);
 
                 const startDate = document.createElement('p');
                 startDate.textContent = `Start Date: ${itinerary.startDate}`;
+                startDate.id = 'startDate';
                 itineraryDiv.appendChild(startDate);
 
                 const endDate = document.createElement('p');
                 endDate.textContent = `End Date: ${itinerary.endDate}`;
+                endDate.id = 'endDate'; 
                 itineraryDiv.appendChild(endDate);
 
                 const activitiesTitle = document.createElement('h3');
                 activitiesTitle.textContent = 'Activities:';
+                activitiesTitle.id = 'activitiesTitle';
                 itineraryDiv.appendChild(activitiesTitle);
 
                 const activitiesList = document.createElement('ul');
+                activitiesList.id = 'activitiesList';
                 itinerary.activities.forEach(activity => {
                     const activityItem = document.createElement('li');
                     const activityDate = new Date(activity.date);
@@ -107,9 +116,11 @@
 
                 const expensesTitle = document.createElement('h3');
                 expensesTitle.textContent = 'Expenses:';
+                expensesTitle.id = 'expensesTitle';
                 itineraryDiv.appendChild(expensesTitle);
 
                 const expensesList = document.createElement('ul');
+                expensesList.id = 'expensesList';
                 itinerary.expenses.forEach(expense => {
                     const expenseItem = document.createElement('li');
                     expenseItem.textContent = `${expense.description}: $${expense.amount.toFixed(2)}`;

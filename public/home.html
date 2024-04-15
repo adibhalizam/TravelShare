@@ -4,21 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <style>
-        .itinerary {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
-
-    <h1>Itineraries List</h1>
-    <button id="mainBtn" onclick="navigateDashboard()">Profile</button>
+    <header>
+        <h1 id="header">TravelShare</h1>
+    </header> 
+    <div id="buttonContainer">
+        <button id="profileBtn" onclick="navigateDashboard()">Profile</button>
+        <button id="logoutBtn" onclick="logout()">Logout</button> <!-- Add Logout button -->
+    </div>
     <div id="userItineraries"></div>
-
+    <footer>
+        <h5>&copy; Travel Planner, 2023</h5>
+    </footer>
     <script>
         const itinerariesContainer = document.getElementById('itineraries-container');
 
@@ -34,6 +33,13 @@
 
         function navigateDashboard() {
             window.location.href = "profile.html";
+        }
+
+        function logout() {
+            // Perform logout actions such as clearing session storage, redirecting to login page, etc.
+            // For example:
+            sessionStorage.clear(); // Clear session storage
+            window.location.href = "login.html"; // Redirect to login page
         }
 
         window.onload = function() {
