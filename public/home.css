@@ -1,109 +1,123 @@
 /* home.css */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
 }
 
+/*800016 A0001c c00021 ff002b 407b47 ffffff 004e89 002962 00043a and black*/
 /* Header styles */
 header {
-    background-color: #343a40;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
+  background-color: #343a40;
+  padding: 10px;
+  text-align: center;
+}
+
+#headercontainer {
+  background-color: #343a40;
+  color: #fff;
+  display: flex;
+  justify-content: space-between; /* Distribute space between items */
+  align-items: center; /* Align items vertically in the center */
+  margin: 0 20px; /* Add margin on both sides */
+  padding: 20px;
+}
+
+#headerlogo {
+  display: flex;
+}
+/* Adjust the size of the SVG icon */
+#map-marker {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px; /* Add some margin between the icon and the heading */
 }
 
 h1 {
-    margin: 0;
+  margin: 0;
 }
 
-#mainBtn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#mainBtn:hover {
-    background-color: #45a049;
+#searchContainer input[type="text"] {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 #userItineraries {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
 .eachItinerary {
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .eachItinerary:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .imageDiv {
-    height: 200px;
-    overflow: hidden;
+  height: 200px;
+  overflow: hidden;
 }
 
 .imageDiv img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .contentDiv {
-    padding: 15px;
-}
-
-/* Button container styles */
-#buttonContainer {
-    text-align: center;
-    margin-bottom: 20px;
+  padding: 15px;
 }
 
 /* Button styles */
 button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-    background-color: #4CAF50; /* Green */
-    color: white;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  background-color: #004e89;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #45a049; /* Darker green */
+  background-color: #45a049;
 }
 
 /* Button container styles */
 #buttonContainer {
-    padding: 20px;
+  padding: 20px;
 }
 
 /* Profile and Logout button styles */
 #profileBtn,
 #logoutBtn {
-    background-color: #008CBA; /* Blue */
+  background-color: #004e89;
 }
 
-#profileBtn:hover,
 #logoutBtn:hover {
-    background-color: #0073e6; /* Darker blue */
+  background-color: #c00021;
 }
 
+/* Footer styles */
+footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 10px 0;
+  background-color: #004e89;
+  color: #fff;
+  border-radius: 0 0 8px 8px;
+}
