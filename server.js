@@ -137,6 +137,21 @@ app.put('/itineraries/:id', (req, res) => {
         });
 });
 
+app.delete('/itineraries/:id', async (req, res) => {
+    const itineraryId = req.params.id;
+
+    try {
+        const deletedItinerary = await Itinerary.findByIdAndDelete(itineraryId);
+        if (!deletedItinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        res.json({ message: 'Itinerary deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting itinerary:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 //Mongoose connection
 mongoose.connect('mongodb+srv://adibhalizam:adibhalizam@travelsharemern-cluster.rlsukhf.mongodb.net/Node-API')
     .then(() => {
