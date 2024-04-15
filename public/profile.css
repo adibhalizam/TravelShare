@@ -1,76 +1,96 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0px;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff; /* White */
+  color: #000000; /* Black */
 }
 
-/* profile Styles */
-.profile {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #407BA7; /* Dark blue */
-    color: #FFFFFF; /* White */
+header {
+  background-color: #a0001c;
+  color: #ffffff;
+  padding: 20px;
+  display: flex; /* Add flex display */
+  align-items: center; /* Align items vertically */
 }
 
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header i {
+  margin-right: 10px; /* Add margin to the right of the icon */
+  font-size: 24px;
 }
 
-section{
-    margin-left: 40px;
-    margin-right: 40px;
+header button#mainBtn {
+  margin-left: auto;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.2);
+}
+/* Container styles */
+#container {
+  padding: 20px;
 }
 
-.profile img {
-    width: 100px; /* Adjust size as needed */
-    height: 100px; /* Adjust size as needed */
-    border-radius: 50%;
+/* Button styles */
+
+button,
+input[type="submit"] {
+  background-color: #c0c0c0;
+  color: #000000;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: 20px;
 }
 
-
-.itinerary {
-    display: flex;
-    align-items: center; /* Align items vertically in the center */
-    padding: 10px; /* Adjust padding as needed */
-    border-radius: 20px; /* Adjust border radius to create a curved shape */
-    background-color: #f0f0f0; /* Background color for the container */
-   margin-bottom: 10px;
-    overflow: hidden; /* Hide overflow to clip the curved edges */
-    position: relative; /* Positioning for the edit link */
+button:hover {
+  background-color: #004e89;
+  color: #407ba7;
 }
 
-.itinerary img {
-    width: 100px; /* Adjust width as needed */
-    height: 100px; /* Adjust height as needed */
-    border-radius: 50%;
-    margin-right: 10px; /* Add space between image and text */
+/* Form styles */
+form {
+  margin-bottom: 20px;
+  background-color: #e5e7eb;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.itinerary-details {
-    flex-grow: 1; /* Allow the details to take up remaining space */
+label {
+  display: block;
+  margin-bottom: 5px;
 }
 
-.itinerary-details h3 {
-    margin: 0;
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+  padding: 8px;
+  margin-bottom: 15px;
+  width: calc(80% - 16px);
+  border-radius: 10px;
 }
 
-.itinerary-details p {
-    margin: 5px 0;
+/* Activity and Expense entry styles */
+.activity-entry,
+.expense-entry {
+  display: flex;
+  align-items: center;
 }
 
-a{
-    text-decoration: none;
-    color: #002962;
-
+.activity-entry input,
+.expense-entry input {
+  flex: 1;
+  margin-right: 10px;
 }
-.link {
-    position: absolute;
-    top: 10px; /* Adjust top position as needed */
-    right: 10px; /* Adjust right position as needed */
-    
+
+/* Footer styles */
+footer {
+  background-color: #002962;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
