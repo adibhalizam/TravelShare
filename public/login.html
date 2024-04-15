@@ -64,7 +64,9 @@
                     outputSpan.innerHTML = "Logged in successfully";
                     sessionStorage.setItem('userId', jsonObject._id);
                     const fullName = jsonObject.fName + " " + jsonObject.lName;
-                    sessionStorage.setItem('name', fullName);
+                    sessionStorage.setItem('fullName', fullName);
+                    sessionStorage.setItem('firstName', jsonObject.fName);
+                    sessionStorage.setItem('lastName', jsonObject.lName);
                     window.location.href ='home.html';
                 } else {
                     outputSpan.innerHTML = "Wrong username or password";
