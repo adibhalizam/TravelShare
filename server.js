@@ -120,6 +120,23 @@ app.get('/itineraries/:id', async (req, res) => {
     }
 });
 
+app.put('/itineraries/:id', (req, res) => {
+    const itineraryId = req.params.id;
+    const updatedItineraryData = req.body;
+
+    Itinerary.findByIdAndUpdate(itineraryId, updatedItineraryData, { new: true })
+        .then(updatedItinerary => {
+            if (!updatedItinerary) {
+                return res.status(404).json({ error: 'Itinerary not found' });
+            }
+            res.json(updatedItinerary);
+        })
+        .catch(error => {
+            console.error('Error updating itinerary:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
 //Mongoose connection
 mongoose.connect('mongodb+srv://adibhalizam:adibhalizam@travelsharemern-cluster.rlsukhf.mongodb.net/Node-API')
     .then(() => {
