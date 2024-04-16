@@ -1,71 +1,76 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #FFFFFF; /* White */
-    color: #000000; /* Black */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff; /* White */
+  color: #000000; /* Black */
+}
+
+header h1 {
+  text-align: center;
+  color: #800016; /* Dark red changed to match color scheme */
 }
 
 .container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #407BA7; /* Dark blue */
-    border-radius: 5px;
-    background-color: #FFFFFF; /* White */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #407ba7; /* Dark blue */
+  border-radius: 5px;
+  background-color: #ffffff; /* White */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 main h2 {
-    color: #800016; /* Dark red */
-    text-align: center;
+  color: #800016; /* Dark red */
+  text-align: center;
 }
 
 main {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 input[type="text"],
 input[type="password"],
 button {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin: 5px 0;
-    box-sizing: border-box;
-    border: 1px solid #407BA7; /* Dark blue */
-    border-radius: 5px;
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 1px solid #407ba7; /* Dark blue */
+  border-radius: 5px;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #004E89; /* Dark blue */
-    color: #FFFFFF; /* White */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 100%;
+  padding: 10px;
+  background-color: #004e89; /* Dark blue */
+  color: #ffffff; /* White */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #002962; /* Dark blue */
+  background-color: #002962; /* Dark blue */
 }
 
 p {
-    text-align: center;
+  text-align: center;
 }
 
 a {
-    color: #407BA7; /* Dark blue */
+  color: #407ba7; /* Dark blue */
 }
 
 a:hover {
-    text-decoration: underline;
-    color: #002962; /* Dark blue */
+  text-decoration: underline;
+  color: #002962; /* Dark blue */
 }
 
 span#output {
-    display: block;
-    text-align: center;
-    margin-top: 10px; /* You can adjust this value as necessary */
+  display: block;
+  text-align: center;
+  margin-top: 10px; /* You can adjust this value as necessary */
 }

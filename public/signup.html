@@ -1,100 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./signup.js"></script>
-    <link rel="stylesheet" type="text/css" href="signup.css">
+    <link rel="stylesheet" type="text/css" href="signup.css" />
     <title>Registration</title>
-</head>
-<body>
+  </head>
+  <body>
+    <header>
+      <h1 id="header">Travel Share</h1>
+    </header>
     <!-- Content container -->
     <div class="container">
-    <main>
+      <main>
         <!-- Registration form -->
         <h2>Register now</h2>
         <!-- First name input -->
         First name:
-        <input type="text" id="fname" name="fname"><br>
+        <input type="text" id="fname" name="fname" /><br />
         <!-- Last name input -->
         Last name:
-        <input type="text" id="lname" name="lname"><br>
+        <input type="text" id="lname" name="lname" /><br />
         <!-- Username input -->
         username:
-        <input type="text" id="username" name="username"><br>
+        <input type="text" id="username" name="username" /><br />
         <!-- Password input -->
         password:
-        <input type="text" id="password" name="password"><br>
+        <input type="text" id="password" name="password" /><br />
         <!-- Registration button -->
-        <button  id="btn_reg">Register</button>
+        <button id="btn_reg">Register</button>
         <!-- Login link -->
         <p>Already have an account? Log in <a href="./login.html">here</a></p>
         <span id="output"></span>
-    </main>
+      </main>
     </div>
-</body>
+  </body>
 
-<script>
+  <script>
     // Output span global variable
     let outputSpan;
 
     // Handle registration button function
     function handleRegButton(event) {
-        event.preventDefault();
+      event.preventDefault();
 
-        // Get form input values
-        const fName = document.querySelector("#fname").value;
-        const lName = document.querySelector("#lname").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+      // Get form input values
+      const fName = document.querySelector("#fname").value;
+      const lName = document.querySelector("#lname").value;
+      const username = document.querySelector("#username").value;
+      const password = document.querySelector("#password").value;
 
-        // API endpoint URL
-        const url = "http://localhost:3000/user";
+      // API endpoint URL
+      const url = "http://localhost:3000/user";
 
-        // Data object to be sent in the POST request
-        const dataObject = {
-            fName: fName,
-            lName: lName,
-            username: username,
-            password: password
-        }
+      // Data object to be sent in the POST request
+      const dataObject = {
+        fName: fName,
+        lName: lName,
+        username: username,
+        password: password,
+      };
 
-        // Fetch request configuration
-        const fetchObject = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataObject)
-        };
+      // Fetch request configuration
+      const fetchObject = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataObject),
+      };
 
-        // Send POST request to the server
-        fetch(url, fetchObject)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
+      // Send POST request to the server
+      fetch(url, fetchObject)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
         })
-        .then(jsonObject => {
-            // Display success message
-            outputSpan.innerHTML = `Account created for ${jsonObject.fName} ${jsonObject.lName}`;
+        .then((jsonObject) => {
+          // Display success message
+          outputSpan.innerHTML = `Account created for ${jsonObject.fName} ${jsonObject.lName}`;
         })
-        .catch(error => {
-            // Display error message
-            console.error('Error:', error);
-            outputSpan.innerHTML = "Failed to create account. Please try again.";
+        .catch((error) => {
+          // Display error message
+          console.error("Error:", error);
+          outputSpan.innerHTML = "Failed to create account. Please try again.";
         });
     }
 
     // Start registration process function
     function start() {
-        const regButton = document.getElementById("btn_reg");
-        regButton.addEventListener('click', handleRegButton);
-        outputSpan = document.getElementById("output");
+      const regButton = document.getElementById("btn_reg");
+      regButton.addEventListener("click", handleRegButton);
+      outputSpan = document.getElementById("output");
     }
 
     // Execute the start function when the window loads
     window.onload = start;
-</script>
+  </script>
 </html>
