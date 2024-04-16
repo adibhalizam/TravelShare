@@ -14,7 +14,7 @@ This project is a web application designed to assist users in managing their tra
 ### Setup Instructions
 1. Open the project folder in the Microsoft Visual Studio Code.
 2. Open the terminal at the root directory of the project, and execute the command 'npm install' to install all project dependencies.
-3. Just in case if Mongoose and Express are not already installed, execute the commands 'npm install mongoose' and 'npm install express' respectively."
+3. Just in case if Mongoose and Express are not already installed, execute the commands 'npm install mongoose' and 'npm install express' respectively.
 
 ### Deployment Steps
 1. To run the server, open the terminal at the root directory of the project, and execute the command 'npm run dev'. Now, the server is running on port 3000 of your computer.
