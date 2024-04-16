@@ -123,6 +123,8 @@
             // Handle successful profile update
             const result = await response.json();
             console.log("Profile updated successfully:", result);
+            const fullName = document.getElementById("fName").value + " " + document.getElementById("lName").value;
+            sessionStorage.setItem('fullName', fullName);
             navigateBack(); // Redirect back to the profile page after updating
           } catch (error) {
             console.error("Error updating profile:", error);
