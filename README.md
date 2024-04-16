@@ -18,5 +18,5 @@ This project is a web application designed to assist users in managing their tra
 
 ### Deployment Steps
 1. To run the server, open the terminal at the root directory of the project, and execute the command 'npm run dev'. Now, the server is running on port 3000 of your computer.
-2. To open the web application, open the folder of the project in file explorer. Click the signup.html file if you want to start from the registration process. Otherwise, you can click the login.html file and immediately login with the credentials, Username: user1 Password:12345
+2. To open the web application, open the folder of the project in file explorer. In the public subfolder, click the signup.html file if you want to start from the registration process. Otherwise, you can click the login.html file and immediately login with the credentials, Username: user1 Password:12345
 3. You can start using the TravelShare web application.
