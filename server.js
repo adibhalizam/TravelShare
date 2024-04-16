@@ -6,9 +6,9 @@ const Itinerary = require('./models/itineraryModel');
 const User = require('./models/userModel');
 const FavoriteItinerary = require('./models/favouriteItineraryModel');
 
-
-app.use(cors({origin: '*'}));
-app.use(express.json());
+// Middleware
+app.use(cors({origin: '*'})); // Allow CORS from all origins
+app.use(express.json()); // Parse JSON request bodies
 
 const PORT = 3000;
 
@@ -17,18 +17,17 @@ app.get('/', (req, res) => {
     res.send("hello node and Express API!");
 });
 
-//Register new user
+// Register new user
 app.post('/user', async (req, res) => {
     try {
+        // Create a new user with the provided data
         const user = await User.create({
-            // Ensure that you're passing the fields as defined in your Mongoose schema
             fName: req.body.fName,
             lName: req.body.lName,
             username: req.body.username,
-            password: req.body.password, // Please remember to hash your passwords in a real-world application
+            password: req.body.password,
         });
         
-        // Responding back without sending sensitive info like password
         const userResponse = {
             _id: user._id,
             fName: user.fName,
@@ -43,7 +42,7 @@ app.post('/user', async (req, res) => {
     }
 });
 
-
+// Retrieve user details by ID
 app.get('/user/:id', async (req, res) => {
     const userId = req.params.id;
 
@@ -62,7 +61,7 @@ app.get('/user/:id', async (req, res) => {
 });
 
 
-//login
+// Login endpoint    
 app.get('/login', async (req, res) => {
     try {
         const { username, password } = req.query;
@@ -81,7 +80,7 @@ app.get('/login', async (req, res) => {
     }
 });
 
-// get all itineraries
+// Retrieve all itineraries
 app.get('/itineraries', async (req, res) => {
     try {
         const itineraries = await Itinerary.find({}).lean();
@@ -92,6 +91,7 @@ app.get('/itineraries', async (req, res) => {
     }
 });
 
+// Retrieve itineraries by user ID
 app.get('/userItineraries', async (req, res) => {
     const { userId } = req.query;     // Filter itineraries based on userId
     try {
@@ -102,14 +102,8 @@ app.get('/userItineraries', async (req, res) => {
     }
 });
 
+// Create a new itinerary
 app.post('/itineraries', async (req, res) => {
-    // try {
-    //     const newItinerary = new Itinerary(req.body);
-    //     await newItinerary.save();
-    //     res.status(201).json(newItinerary);
-    // } catch (error) {
-    //     res.status(500).json({ error: error.message });
-    // }
     // Format the dates to ensure no time data is included
     req.body.startDate = new Date(req.body.startDate).toISOString().slice(0, 10);
     req.body.endDate = new Date(req.body.endDate).toISOString().slice(0, 10);
@@ -127,6 +121,7 @@ app.post('/itineraries', async (req, res) => {
     }
 });
 
+// Retrieve itinerary by ID
 app.get('/itineraries/:id', async (req, res) => {
     const itineraryId = req.params.id;
     try {
@@ -141,6 +136,7 @@ app.get('/itineraries/:id', async (req, res) => {
     }
 });
 
+// Update itinerary by ID
 app.put('/itineraries/:id', (req, res) => {
     const itineraryId = req.params.id;
     const updatedItineraryData = req.body;
@@ -158,10 +154,12 @@ app.put('/itineraries/:id', (req, res) => {
         });
 });
 
+// Delete itinerary by ID
 app.delete('/itineraries/:id', async (req, res) => {
     const itineraryId = req.params.id;
 
     try {
+        // Find and delete itinerary by ID
         const deletedItinerary = await Itinerary.findByIdAndDelete(itineraryId);
         if (!deletedItinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
@@ -185,7 +183,6 @@ app.put('/itineraries/:id/addComment', async (req, res) => {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
 
-        // Assuming you have a User model and you want to associate the comment with a user
         const user = await User.findById(userId);
 
         if (!user) {
@@ -211,6 +208,7 @@ app.put('/itineraries/:id/addComment', async (req, res) => {
     }
 });
 
+// Delete comment from an itinerary
 app.put('/itineraries/:id/deleteComment/:commentId', async (req, res) => {
     try {
         const { id, commentId } = req.params;
@@ -236,43 +234,7 @@ app.put('/itineraries/:id/deleteComment/:commentId', async (req, res) => {
     }
 });
 
-app.post('/itineraries/:id/like', async (req, res) => {
-    const itineraryId = req.params.id;
-    const userId = req.body.userId; // The ID of the user liking the itinerary
-    const like = req.body.like; // Boolean indicating whether the action is a like (true) or unlike (false)
-
-    try {
-        const itinerary = await Itinerary.findById(itineraryId);
-
-        if (!itinerary) {
-            return res.status(404).json({ error: 'Itinerary not found' });
-        }
-        
-        // Check if the user has already liked the itinerary
-        const index = itinerary.likes.indexOf(userId);
-
-        // Toggle the user's like status
-        if (like) {
-            // If the user is liking the itinerary and hasn't liked it before
-            if (index === -1) {
-                itinerary.likes.push(userId);
-            }
-        } else {
-            // If the user is unliking the itinerary and has liked it before
-            if (index > -1) {
-                itinerary.likes.splice(index, 1);
-            }
-        }
-        
-        // Save the updated itinerary
-        await itinerary.save();
-        res.status(200).json(itinerary);
-    } catch (error) {
-        console.error('Error liking/unliking itinerary:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
+// Add itinerary to favorite
 app.post('/addFavoriteItinerary', async (req, res) => {
     try {
         const favorite = await FavoriteItinerary.create(req.body);
@@ -283,6 +245,7 @@ app.post('/addFavoriteItinerary', async (req, res) => {
     }
 });
 
+// Remove itinerary from favorite
 app.delete('/removeFavoriteItinerary', async (req, res) => {
     try {
         const favorite = await FavoriteItinerary.findOneAndDelete(req.body);
@@ -308,6 +271,7 @@ app.get('/getFavoriteItineraries', async (req, res) => {
     }
 });
 
+// Retrieve favorite count by itineraryId
 app.get('/getFavoriteCount/:itineraryId', async (req, res) => {
     const { itineraryId } = req.params;
 

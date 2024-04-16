@@ -6,6 +6,7 @@
   </head>
 
   <body>
+    <!-- Page header (Logo and title) -->
     <header>
       <div class="header-container">
         <svg
@@ -21,7 +22,9 @@
         <h1 id="header">TravelShare</h1>
 
         <div id="header-button">
+          <!-- Navigate to main page button -->
           <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
+          <!-- Edit profile button -->
           <button id="editProfileBtn" onclick="navigateToEditProfile()">
             Edit Profile
           </button>
@@ -29,20 +32,26 @@
       </div>
     </header>
     <div id="container">
+      <!-- User itineraries section -->
       <h2>Your Itineraries</h2>
       <div id="userItineraries"><!-- User itineraries go here --></div>
 
+      <!-- Create a New Itinerary section -->
       <h2>Create a New Itinerary</h2>
+      <!-- Itinerary form -->
       <form id="itineraryForm">
+        <!-- Destination input -->
         <label for="destination">Destination:</label><br />
         <input type="text" id="destination" name="destination" required /><br />
 
+        <!-- Start and End Dates input -->
         <label for="startDate">Start Date:</label><br />
         <input type="date" id="startDate" name="startDate" required /><br />
 
         <label for="endDate">End Date:</label><br />
         <input type="date" id="endDate" name="endDate" required /><br />
 
+        <!-- Activities section -->
         <label>Activities:</label><br />
         <div id="activities">
           <!-- Activity fields go here -->
@@ -63,6 +72,7 @@
           Add Activity</button
         ><br />
 
+        <!-- Expenses section -->
         <label>Expenses:</label><br />
         <div id="expenses">
           <!-- Expenses fields go here -->
@@ -89,31 +99,39 @@
           Add Expense</button
         ><br />
 
+        
+        <!-- Image Link input -->
         <label for="imageLink">Image Link:</label><br />
         <input type="text" id="imageLink" name="imageLink" required /><br />
 
+        <!-- Submit button to create itinerary -->
         <input type="submit" id="submitBtn" value="Create Itinerary" />
       </form>
 
+      <!-- Favourite Itineraries section -->
       <h2>Favourite Itineraries</h2>
       <div id="userFavouriteItineraries">
         <!-- Liked itineraries go here -->
       </div>
     </div>
+    <!-- Page footer -->
     <footer>
       <h5>&copy; TravelShare, 2024</h5>
     </footer>
 
     <script>
+      // Get currentUserId using session storage
       const currentUserId =
         sessionStorage.getItem("userId") || "user-id-placeholder";
 
+      // Calculate duration function
       function calculateDuration(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
         return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1 + " days";
       }
 
+      // Calculate total expenses function
       function calculateTotalExpenses(expensesArray) {
         return expensesArray.reduce(
           (total, expense) => total + expense.amount,
@@ -121,6 +139,7 @@
         );
       }
 
+      // Fetch itineraries function
       function fetchItineraries() {
         // Fetch itineraries created by the user
         fetch("http://localhost:3000/userItineraries?userId=" + currentUserId)
@@ -172,11 +191,13 @@
             console.error("Error fetching user itineraries:", error)
           );
       }
-
+      
+      // Remove activity field function
       function removeActivityField(button) {
         button.parentElement.remove();
       }
 
+      // Add activity field function
       function addActivityField() {
         const activitiesDiv = document.getElementById("activities");
         const activityEntry = document.createElement("div");
@@ -190,6 +211,7 @@
         updateActivityDateConstraints();
       }
 
+      // Add expensee field function
       function addExpenseField() {
         const expensesDiv = document.getElementById("expenses");
         const expenseEntry = document.createElement("div");
@@ -202,11 +224,12 @@
         expensesDiv.appendChild(expenseEntry);
       }
 
+      // Remove expense field function
       function removeExpenseField(button) {
         button.parentElement.remove();
-        // Optionally, recalculate total expenses when removing an expense
       }
 
+      // Update activity date constraints function 
       function updateActivityDateConstraints() {
         const startDateVal = document.getElementById("startDate").value;
         const endDateVal = document.getElementById("endDate").value;
@@ -218,15 +241,17 @@
           });
       }
 
+      // Navigate to home page function
       function navigateDashboard() {
         window.location.href = "home.html";
       }
 
+      // Navigate to edit profile page function
       function navigateToEditProfile() {
-        // Navigate to the editProfile.html page
         window.location.href = "editProfile.html";
       }
 
+      // Create itinerary function
       function createItinerary(event) {
         event.preventDefault();
         const activities = [];
@@ -264,8 +289,6 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // Include authorization header if required, e.g.:
-            // 'Authorization': 'Bearer ' + userToken
           },
           body: JSON.stringify(itineraryData),
         })
@@ -276,7 +299,6 @@
             return response.json();
           })
           .then((data) => {
-            // Post-creation logic, like redirecting to a different page or refreshing the itineraries list
             console.log(data);
             fetchItineraries();
           })
@@ -284,12 +306,13 @@
         fetchItineraries();
       }
 
-      // Function to handle editing an itinerary
+      // Edit itinerary function
       function editItinerary(itineraryId) {
         // Redirect to the edit page with the itinerary ID as a query parameter
         window.location.href = `editSpecificItinerary.html?id=${itineraryId}`;
       }
 
+      // Delete itinerary function
       function deleteItinerary(id) {
         fetch(`http://localhost:3000/itineraries/${id}`, {
           method: "DELETE",
@@ -304,6 +327,7 @@
           .catch((error) => console.error("Error deleting itinerary:", error));
       }
 
+      // Display favorite itineraries function
       function getFavItineraries() {
         fetch(
           `http://localhost:3000/getFavoriteItineraries?user=${currentUserId}`
@@ -313,7 +337,6 @@
             const itinerariesDiv = document.getElementById(
               "userFavouriteItineraries"
             );
-            //let itineraryId = [];
             data.forEach(async (itinerary) => {
               const response = await fetch(
                 `http://localhost:3000/itineraries/${itinerary.itinerary}`
@@ -322,12 +345,10 @@
               const itineraryParagraph = document.createElement("li");
               itineraryParagraph.classList.add("fav-itinerary");
               itineraryParagraph.classList.add("fav-itinerary");
-              itineraryParagraph.textContent = itineraryData.destination; //Display only title here
-              //itineraryId.push({ id: itinerary._id });
+              itineraryParagraph.textContent = itineraryData.destination;
               const viewButton = document.createElement("button");
               viewButton.textContent = "View Itinerary";
               viewButton.classList.add("view-btn");
-              // Allows the button to redirect to specificRecipe.html with the recipe id as a query parameter
               viewButton.onclick = function () {
                 window.location.href = `specificItinerary.html?id=${itinerary.itinerary}`;
               };

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="home.css" />
   </head>
   <body>
+    <!-- Page header (Logo and title)-->
     <header>
       <div id="headercontainer">
         <div id="headerlogo">
@@ -21,14 +22,16 @@
             ></path>
           </svg>
           <h1 id="header">TravelShare</h1>
+          <!-- Greeting message container -->
           <div id="greetingMessage"></div>
         </div>
         <div id="buttoncontainer">
+          <!-- Profile and logout buttons -->
           <button id="profileBtn" onclick="navigateDashboard()">Profile</button>
           <button id="logoutBtn" onclick="logout()">Logout</button>
         </div>
       </div>
-      <!-- Add search form -->
+      <!-- Search form (for destination) -->
       <div id="searchContainer">
         <form id="searchForm" onsubmit="searchItineraries(event)">
           <input
@@ -40,15 +43,19 @@
         </form>
       </div>
     </header>
+    <!-- User itineraries container -->
     <div id="userItineraries"></div>
+    <!-- Page footer -->
     <footer>
       <h5>&copy; TravelShare, 2024</h5>
     </footer>
     <script>
+      // itinerariesContainer variable definition
       const itinerariesContainer = document.getElementById(
         "itineraries-container"
       );
 
+      // Search itineraries function
       function searchItineraries(event) {
         event.preventDefault(); // Prevent form submission
 
@@ -76,7 +83,7 @@
           });
       }
 
-      // Function to render itineraries on the page
+      // Render itineraries on the page function
       function renderItineraries(itineraries) {
         const itinerariesContainer = document.getElementById("userItineraries");
         itinerariesContainer.innerHTML = ""; // Clear previous content
@@ -95,7 +102,7 @@
           const imageDiv = document.createElement("div");
           imageDiv.setAttribute("class", "imageDiv");
           const imageFile = document.createElement("img");
-          imageFile.src = itinerary.image; // assuming there's an 'image' property
+          imageFile.src = itinerary.image;
           imageDiv.appendChild(imageFile);
 
           const contentDiv = document.createElement("div");
@@ -113,7 +120,7 @@
 
           const viewButton = document.createElement("button");
           viewButton.textContent = "View Itinerary";
-          // Update the button click event for your itineraries
+          // Update the button click event for itineraries
           viewButton.onclick = function () {
             window.location.href = `specificItinerary.html?id=${itinerary._id}`;
           };
@@ -133,12 +140,14 @@
         });
       }
 
+      // Calculate duration (for itinerary) function
       function calculateDuration(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
         return Math.ceil((end - start) / (1000 * 60 * 60 * 24) + 1) + " days";
       }
 
+      // Calculate total expense function
       function calculateTotalExpenses(expensesArray) {
         return expensesArray.reduce(
           (total, expense) => total + expense.amount,
@@ -146,19 +155,20 @@
         );
       }
 
+      // Navigate to the profile page function
       function navigateDashboard() {
         window.location.href = "profile.html";
       }
 
+      // Logout function
       function logout() {
-        // Perform logout actions such as clearing session storage, redirecting to login page, etc.
-        // For example:
         sessionStorage.clear(); // Clear session storage
         window.location.href = "login.html"; // Redirect to login page
       }
 
+      // Function to execute when the window loads
       window.onload = function () {
-        const itinerariesContainer = document.getElementById("userItineraries"); // Make sure you have a container with this ID
+        const itinerariesContainer = document.getElementById("userItineraries");
         const fullName = sessionStorage.getItem("fullName");
 
         // Get the greeting message container element
@@ -178,9 +188,11 @@
           greetingMessageContainer.textContent = "Hello User";
         }
 
+        // Fetch itineraries data from the server
         fetch("http://localhost:3000/itineraries")
           .then((response) => response.json())
           .then((itineraries) => {
+            // Render itineraries on the page
             itineraries.forEach((itinerary) => {
               const duration = calculateDuration(
                 itinerary.startDate,
@@ -195,7 +207,7 @@
               const imageDiv = document.createElement("div");
               imageDiv.setAttribute("class", "imageDiv");
               const imageFile = document.createElement("img");
-              imageFile.src = itinerary.image; // assuming there's an 'image' property
+              imageFile.src = itinerary.image;
               imageDiv.appendChild(imageFile);
 
               const contentDiv = document.createElement("div");
@@ -213,7 +225,7 @@
 
               const viewButton = document.createElement("button");
               viewButton.textContent = "View Itinerary";
-              // Update the button click event for your itineraries
+              // Update the button click event for itineraries
               viewButton.onclick = function () {
                 window.location.href = `specificItinerary.html?id=${itinerary._id}`;
               };

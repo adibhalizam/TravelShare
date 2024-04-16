@@ -8,6 +8,7 @@
   </head>
 
   <body>
+    <!-- Page headeer (Logo and title) -->
     <header>
       <div class="header-container">
         <svg
@@ -21,12 +22,15 @@
           ></path>
         </svg>
         <h1 id="header">TravelShare</h1>
+        <!-- Navigate to main page button -->
         <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
       </div>
     </header>
 
     <div id="container">
+      <!-- Favourite count -->
       <div id="favoriteCount">
+        <!-- Heart icon -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -37,11 +41,14 @@
             d="M20.16,4.61A6.27,6.27,0,0,0,12,4a6.27,6.27,0,0,0-8.16,9.48l7.45,7.45a1,1,0,0,0,1.42,0l7.45-7.45A6.27,6.27,0,0,0,20.16,4.61Zm-1.41,7.46L12,18.81,5.25,12.07a4.28,4.28,0,0,1,3-7.3,4.25,4.25,0,0,1,3,1.25,1,1,0,0,0,1.42,0,4.27,4.27,0,0,1,6,6.05Z"
           ></path>
         </svg>
+        <!-- Favorite count value -->
         <span id="favoriteCountValue"></span>
       </div>
+      <!-- Add to favorite button -->
       <button id="favoriteItinerary" onclick="addFavorite()">
         Add to Favorite
       </button>
+      <!-- Remove from favorite button -->
       <button
         id="removeFavoriteItinerary"
         style="display: none"
@@ -50,6 +57,7 @@
         Remove from Favorite
       </button>
 
+      <!-- Itinerary details section -->
       <div id="itineraryDetails">
         <!-- Itinerary details will be populated here -->
       </div>
@@ -63,12 +71,15 @@
       </div>
     </div>
 
+    <!-- Page footer -->
     <footer>
       <h5 id="footer">&copy; TravelShare, 2024</h5>
     </footer>
 
     <script>
       var id;
+      
+      // Functions to execute when the window loads
       window.onload = async function () {
         const urlParams = new URLSearchParams(window.location.search);
         id = urlParams.get("id");
@@ -77,10 +88,12 @@
         fetchFavoriteCount();
       };
 
+      // Navigate to home page function
       function navigateDashboard() {
         window.location.href = "home.html";
       }
 
+      // Check if the itinerary is favorited by the user function
       function getFavoriteItineraries() {
         const currentUserId = sessionStorage.getItem("userId");
         fetch(
@@ -191,18 +204,7 @@
           });
           itineraryDiv.appendChild(expensesList);
 
-          // Display comments
-          // const commentsTitle = document.createElement('h3');
-          // commentsTitle.textContent = 'Comments:';
-          // itineraryDiv.appendChild(commentsTitle);
-
-          // const commentsList = document.createElement('ul');
-          // itinerary.comments.forEach(comment => {
-          //     const commentItem = document.createElement('li');
-          //     commentItem.textContent = `${comment.username}: ${comment.text}`;
-          //     commentsList.appendChild(commentItem);
-          // });
-          // itineraryDiv.appendChild(commentsList);
+          // Display comments 
           itinerary.comments.forEach((comments) => {
             const commentFeed = document.createElement("p");
             commentFeed.id = `comment_${comments._id}`;
@@ -221,10 +223,8 @@
               })
               .catch((error) => console.error(error));
             commentWrapper.appendChild(commentFeed);
-            // commentDiv.appendChild(commentFeed);
             if (comments.user == sessionStorage.getItem("userId"))
               commentWrapper.appendChild(delComment);
-            // commentDiv.appendChild(delComment);
             commentDiv.appendChild(commentWrapper);
           });
         } catch (error) {
@@ -234,6 +234,7 @@
         }
       }
 
+      // Add comment function
       function addComment() {
         const comment = document.getElementById("comment").value;
         const userId = sessionStorage.getItem("userId");
@@ -253,6 +254,7 @@
           .catch((error) => console.error("Error adding comment:", error));
       }
 
+      // Delete comment from the itinerary function
       function deleteComment(commentId) {
         fetch(
           `http://localhost:3000/itineraries/${id}/deleteComment/${commentId}`,
@@ -268,6 +270,7 @@
           .catch((error) => console.error(error));
       }
 
+      // Add itinerary to favorite function
       function addFavorite() {
         const favoriteData = {
           user: sessionStorage.getItem("userId"),
@@ -292,6 +295,7 @@
           .catch((error) => console.error(error));
       }
 
+      // Remove itinerary from favorite function
       function removeFavorite() {
         const favoriteData = {
           user: sessionStorage.getItem("userId"),
@@ -317,6 +321,7 @@
           .catch((error) => console.error(error));
       }
 
+      // Fetch and display favorite count for the current itinerary
       function fetchFavoriteCount() {
         fetch(`http://localhost:3000/getFavoriteCount/${id}`)
           .then((response) => response.json())
@@ -329,9 +334,6 @@
           .catch((error) => console.error(error));
       }
 
-      function navigatePage() {
-        window.location.href = "mainPage.html";
-      }
     </script>
   </body>
 </html>

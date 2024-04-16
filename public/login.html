@@ -7,25 +7,32 @@
     <title>Login</title>
 </head>
 <body>
+    <!-- Page header -->
     <header>
         <h1 id="header">Travel Share</h1>
     </header>
 
     <div class="container">
         <main>
+            <!-- Login form -->
             <h2>Log in to Travel Share</h2>
+            <!-- Username input -->
             Username:
             <input type="text" id="username" name="username" placeholder="Enter your username" required><br>
+            <!-- Password input -->
             Password:
             <input type="password" id="password" name="password" placeholder="Enter your password" required><br>
+            <!-- Submit button to login -->
             <div class="wrap">
                 <button type="submit" id="btn_login">
                     Submit
                 </button>
             </div>
+            <!-- Signup link -->
             <p>Not registered? 
                 <a href="./signup.html">Create an account</a>
             </p>
+            <!-- Output message -->
             <span id="output"></span>
         </main>
     </div>
@@ -33,18 +40,22 @@
 </body>
 
 <script>
-    
+    // Output span global variable
     let outputSpan;
 
+    // Handle login button click function
     function handleLoginButton() {
         console.log("Button clicked");
 
+        // Get username and password values
         const username = document.querySelector("#username").value;
         const password = document.querySelector("#password").value;
 
+        // API URL and parameters definition
         const url = "http://localhost:3000/login";
         const params = `?username=${username}&password=${password}`;
 
+        // Fetch option definition
         const fetchObject = {
             method: 'GET',
             headers: {
@@ -52,6 +63,7 @@
             }
         };
 
+        // Fetch request
         fetch(url + params, fetchObject)
             .then(response => {
                 if (!response.ok) {
@@ -61,13 +73,14 @@
             })
             .then(jsonObject => {
                 if (jsonObject) {
+                    // Display login success message and store user data in session storage
                     outputSpan.innerHTML = "Logged in successfully";
                     sessionStorage.setItem('userId', jsonObject._id);
                     const fullName = jsonObject.fName + " " + jsonObject.lName;
                     sessionStorage.setItem('fullName', fullName);
                     sessionStorage.setItem('firstName', jsonObject.fName);
                     sessionStorage.setItem('lastName', jsonObject.lName);
-                    window.location.href ='home.html';
+                    window.location.href ='home.html';  // Redirect to home page
                 } else {
                     outputSpan.innerHTML = "Wrong username or password";
                 }
@@ -78,12 +91,14 @@
             });
     }
 
+    // Initialize page function 
     function start() {
         const loginButton = document.getElementById("btn_login");
         loginButton.addEventListener('click', handleLoginButton);
         outputSpan = document.getElementById("output");
     }
 
+    // Execute start function when window loads
     window.onload = start;
 
 </script>

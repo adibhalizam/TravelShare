@@ -6,6 +6,7 @@
   </head>
 
   <body>
+    <!-- Page header (Logo and title) -->
     <header>
       <div class="header-container">
         <svg
@@ -19,13 +20,16 @@
           ></path>
         </svg>
         <h1 id="header">TravelShare</h1>
+        <!-- Button to navigate to the main page -->
         <button id="mainBtn" onclick="navigateDashboard()">Main Page</button>
       </div>
     </header>
     <div id="container">
       <h2>Edit Itinerary</h2>
       <div id="editFormContainer">
+        <!-- Edit itinerary form -->
         <form id="editForm">
+          <!-- Input fields (destination, dates, activities, expenses, and image link) -->
           <label for="editDestination">Destination:</label><br />
           <input
             type="text"
@@ -47,8 +51,9 @@
 
           <label>Activities:</label><br />
           <div id="editActivities">
-            <!-- Activity fields go here -->
+            <!-- Activity fields are dynamically added here -->
           </div>
+          <!-- Button to add new activity field -->
           <button
             type="button"
             id="editAddActivityBtn"
@@ -59,8 +64,9 @@
 
           <label>Expenses:</label><br />
           <div id="editExpenses">
-            <!-- Expenses fields go here -->
+            <!-- Expenses fields are dynamically added here -->
           </div>
+          <!-- Button to add new expense field -->
           <button
             type="button"
             id="editAddExpenseBtn"
@@ -77,18 +83,22 @@
             required
           /><br />
 
+          <!-- Update itinerary submit button -->
           <input type="submit" id="updateBtn" value="Update Itinerary" />
         </form>
       </div>
     </div>
+    <!-- Page footer -->
     <footer>
       <h5>&copy; TravelShare, 2024</h5>
     </footer>
 
     <script>
+      // Retrieve currentUserId from session storage
       const currentUserId =
         sessionStorage.getItem("userId") || "user-id-placeholder";
 
+      //  Populate the edit form with itinerary data form
       function populateEditForm(itinerary) {
         document.getElementById("editDestination").value =
           itinerary.destination;
@@ -100,6 +110,7 @@
         const editActivitiesDiv = document.getElementById("editActivities");
         editActivitiesDiv.innerHTML = "";
         itinerary.activities.forEach((activity) => {
+          // Create activity entry
           const activityEntry = document.createElement("div");
           activityEntry.className = "activity-entry";
           const dateValue = new Date(activity.date).toISOString().split("T")[0];
@@ -115,6 +126,7 @@
         const editExpensesDiv = document.getElementById("editExpenses");
         editExpensesDiv.innerHTML = "";
         itinerary.expenses.forEach((expense) => {
+          // Create expense entry
           const expenseEntry = document.createElement("div");
           expenseEntry.className = "expense-entry";
           expenseEntry.innerHTML = `
@@ -126,6 +138,7 @@
         });
       }
 
+      // Update itinerary function
       function updateItinerary(event) {
         event.preventDefault();
         // Get itinerary ID from the URL query parameter
@@ -180,20 +193,23 @@
           })
           .then((data) => {
             console.log("Itinerary updated:", data);
-            // Redirect to the main page after successful update
+            // Redirect to the profile page after successful update
             window.location.href = "profile.html";
           })
           .catch((error) => console.error("Error updating itinerary:", error));
       }
 
+      // Remove activity field function
       function removeEditActivityField(button) {
         button.parentElement.remove();
       }
 
+      // Remove expense field function
       function removeEditExpenseField(button) {
         button.parentElement.remove();
       }
 
+      // Add new activity field function
       function addEditActivityField() {
         const editActivitiesDiv = document.getElementById("editActivities");
         const activityEntry = document.createElement("div");
@@ -207,6 +223,7 @@
         updateActivityDateConstraints();
       }
 
+      // Add new expense field function
       function addEditExpenseField() {
         const editExpensesDiv = document.getElementById("editExpenses");
         const expenseEntry = document.createElement("div");
@@ -218,11 +235,13 @@
             `;
         editExpensesDiv.appendChild(expenseEntry);
       }
-
+      
+      // Navigate to home page function
       function navigateDashboard() {
         window.location.href = "home.html";
       }
 
+      // Update date constraints for activity entries function
       function updateActivityDateConstraints() {
         const startDateVal = document.getElementById("editStartDate").value;
         const endDateVal = document.getElementById("editEndDate").value;
